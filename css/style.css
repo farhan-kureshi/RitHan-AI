@@ -1,0 +1,390 @@
+/* @import "tailwindcss"; */
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    /* side scroll/space remove karega */
+    width: 100%;
+}
+
+.headline {
+    font-family: 'Space Grotesk', Inter, sans-serif;
+    letter-spacing: -0.02em;
+}
+
+
+/* Dark mode headline gradient */
+.headline-gradient-dark {
+    background: linear-gradient(90deg, #66FCF1 0%, #7C83FF 45%, #A78BFA 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 18px rgba(102, 252, 241, 0.15);
+}
+
+/* Light mode variant */
+.light-mode .headline-gradient-dark {
+    background: linear-gradient(90deg, #2563EB 0%, #7C3AED 50%, #06B6D4 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    /* ensure background gradient dikhe */
+    text-shadow: none;
+}
+
+/* Optional: keyword pill style if chaho */
+.headline-key {
+    padding: 0 .35rem;
+    border-radius: .5rem;
+    background: rgba(102, 252, 241, .12);
+}
+
+.light-mode .headline-key {
+    background: rgba(37, 99, 235, .12);
+}
+
+/* --- Basic Styles --- */
+/*body {
+    font-family: 'Inter', sans-serif;
+    background-color: #0B0C10;
+    color: #C5C6C7;
+}
+
+.gradient-bg {
+    background: linear-gradient(180deg, #1F2833 0%, #0B0C10 100%);
+}*/
+body {
+    background-color: #1A1C23;
+    color: #D1D3D6;
+}
+.gradient-bg {
+    background: linear-gradient(180deg, #2C3442 0%, #1A1C23 100%);
+}
+
+/* --- 3D MODEL KE LIYE NAYE STYLES --- */
+section.gradient-bg {
+    position: relative;
+    /* Parent container ke liye zaroori */
+    overflow: hidden;
+    /* Extra scrollbars ko rokne ke liye */
+}
+
+section.gradient-bg spline-viewer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    /* Model ko background mein rakhega */
+}
+
+section.gradient-bg .container {
+    position: relative;
+    z-index: 2;
+    /* Aapke text aur button ko upar rakhega */
+}
+
+/* --- 3D MODEL KE STYLES KHATAM --- */
+
+.btn-primary {
+    background-color: #66FCF1;
+    /* Changed to electric blue */
+    color: #0B0C10;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: #45A29E;
+    /* Darker blue on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px #66fcf133;
+    /* Updated shadow color */
+}
+
+/* Add new styles for the specific text elements */
+#typing-headline,
+#typing-headline span {
+    color: #00FFFF !important;
+    /* Bright cyan for main heading */
+}
+
+.gradient-bg .container p {
+    color: #000000 !important;
+    /* Soft purple for subheading */
+}
+
+/* Rest of your existing styles remain exactly the same */
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid #45A29E;
+    color: #66FCF1;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #45A29E;
+    color: #0B0C10;
+}
+
+.glass-card {
+    background: rgba(31, 40, 51, 0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(69, 162, 158, 0.2);
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out;
+}
+
+/* Light Mode Styles */
+/*.light-mode {
+    background-color: #f5f7fa;
+    color: #1a1a1a;
+}
+
+.light-mode .gradient-bg {
+    background: linear-gradient(180deg, #e2e8f0 0%, #f5f7fa 100%);
+}*/
+.light-mode {
+    background-color: #e8ebf0;
+}
+.light-mode .gradient-bg {
+    background: linear-gradient(180deg, #d7dce2 0%, #e8ebf0 100%);
+}
+
+.light-mode .btn-primary {
+    background-color: hsl(209, 62%, 50%);
+    color: white;
+}
+
+.light-mode .btn-primary:hover:not(:disabled) {
+    background-color: #63b3ed;
+    box-shadow: 0 4px 15px rgba(49, 130, 206, 0.2);
+}
+
+.light-mode .btn-secondary {
+    border: 1px solid #63b3ed;
+    color: #3182ce;
+}
+
+.light-mode .btn-secondary:hover {
+    background-color: #63b3ed;
+    color: white;
+}
+
+.light-mode .glass-card {
+    background: rgba(245, 247, 250, 0.8);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.light-mode header.sticky {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.light-mode .text-white {
+    color: #1a1a1a !important;
+}
+
+.light-mode .text-\[\#C5C6C7\] {
+    color: #4a5568 !important;
+}
+
+.light-mode .bg-\[\#1F2833\] {
+    background-color: #e2e8f0 !important;
+}
+
+.light-mode .bg-\[\#0B0C10\] {
+    background-color: #f5f7fa !important;
+}
+
+/* --- UPDATED PRE-LOADER STYLES --- */
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0B0C10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.8s ease-in-out;
+}
+
+#preloader .logo-container {
+    animation: pulse-glow 2s infinite ease-in-out;
+}
+
+#preloader img {
+    max-width: 150px;
+    /* Accha size */
+    height: auto;
+    border-radius: 50%;
+    /* Logo ko GOL banayega */
+}
+
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 10px rgba(102, 252, 241, 0.4));
+    }
+
+    50% {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 25px rgba(102, 252, 241, 0.8));
+    }
+}
+
+/* NAYA SAHI CODE */
+header.sticky {
+    position: fixed; /* YEH LINE ADD KARNI HAI */
+    background-color: rgba(11, 12, 16, 0.8);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+#back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #66FCF1;
+    color: #0B0C10;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+#back-to-top.show {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#back-to-top:hover {
+    background-color: #45A29E;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.75rem;
+}
+
+.gallery-item .prompt-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 1rem;
+    transform: translateY(100%);
+    transition: transform 0.3s ease-in-out;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+.gallery-item:hover .prompt-overlay {
+    transform: translateY(0);
+}
+
+.gallery-item img {
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+.animate-glow {
+    box-shadow: 0 0 15px rgba(102, 252, 241, 0), 0 0 20px rgba(102, 252, 241, 0);
+    animation: glow 2s infinite ease-in-out;
+}
+
+@keyframes glow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 15px rgba(0, 180, 255, 0.4), 0 0 20px rgba(0, 180, 255, 0.3);
+        /* Updated to match new button color */
+    }
+
+    50% {
+        box-shadow: 0 0 25px rgba(0, 180, 255, 0.8), 0 0 35px rgba(0, 180, 255, 0.6);
+        /* Updated to match new button color */
+    }
+}
+
+.step-item::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(to right, #66FCF1, #45A29E);
+    margin: 20px auto 0;
+    border-radius: 2px;
+}
+
+/* NEW: Glassy Mobile Menu Style */
+#mobile-menu {
+    transition: all 0.3s ease-in-out;
+    background: rgba(31, 40, 51, 0.7);
+    backdrop-filter: blur(15px);
+}
+
+/* NEW: Light mode for Glassy Menu */
+.light-mode #mobile-menu {
+    background: rgba(245, 247, 250, 0.8);
+}
+/* -- Is code ko Dashboard.css file ke aakhir mein add karein -- */
+
+/* PRO user ke avatar ke liye multi-color border */
+.pro-avatar-border::before {
+    content: '';
+    position: absolute;
+    top: -2px; 
+    left: -2px; 
+    right: -2px; 
+    bottom: -2px;
+    border-radius: 50%;
+    background: conic-gradient(#d946ef, #f43f5e, #f97316, #eab308, #84cc16, #22c55e, #14b8a6, #0ea5e9, #6366f1, #d946ef);
+    z-index: -1;
+    animation: rotate 3s linear infinite; /* Optional: Yeh border ko ghumayega */
+}
+
+/* PRO aur FREE badge ke liye common style */
+.status-badge {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background-color: #374151; /* gray-700 */
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+/* PRO badge ka specific color */
+.pro-badge {
+    color: var(--text-primary);
+}

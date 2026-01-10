@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en" class="dark-mode">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RitHan AI - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="images/logo-1.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/Dashboard.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</head>
+
+<body class="dark-mode">
+
+    <div class="flex h-screen overflow-hidden bg-[var(--bg-dark)]">
+        <!-- Overlays and Hidden Panels -->
+        <div id="sidebar-overlay" class="sidebar-overlay md:hidden"></div>
+        <div id="settings-panel-container" class="hidden"></div>
+        <div id="settings-panel-overlay" class="hidden fixed inset-0 bg-black/50 z-40"></div>
+        <div id="loader-container" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center">
+            <div class="loader"></div>
+        </div>
+        <div id="error-container"
+            class="hidden fixed top-5 right-5 bg-red-500 text-white p-4 rounded-lg shadow-lg z-50"></div>
+
+
+        <!-- ================================== -->
+        <!-- ===== SIDEBAR START ===== -->
+        <!-- ================================== -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-[var(--bg-sidebar)] border-r border-[var(--border-color)] 
+        transition-transform duration-300 -translate-x-full 
+        flex-shrink-0 flex flex-col custom-scrollbar overflow-y-auto z-50">
+
+            <!-- Logo -->
+            <a href="index.html"
+                class="littlnavbar flex items-center justify-center h-20 border-b border-[var(--border-color)] flex-shrink-0">
+                <img src="images/logo-1.png" alt="Logo" class="w-10 h-10"
+                    onerror="this.onerror=null;this.src='https://placehold.co/40x40/0B0C10/66FCF1?text=P';">
+                <h1 class="text-2xl font-bold text-white ml-2 headline">RitHan AI</h1>
+            </a>
+
+            <!-- Main Navigation -->
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <div class="flex items-center justify-between px-3">
+                    <p class="text-xs font-semibold uppercase text-gray-500 tracking-wider">Menu</p>
+                    <button id="toggle-menu" class="text-[var(--accent-primary)] text-sm">−</button>
+                </div>
+                <div id="menu-links" class="space-y-2 mt-2">
+                    <a href="index.html" class="sidebar-link flex items-center p-3 rounded-lg"><svg class="w-5 h-5 mr-3"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                            </path>
+                        </svg><span>Home</span></a>
+                    <a href="#" data-page="text-to-image"
+                        class="sidebar-link active flex items-center p-3 rounded-lg"><svg class="w-5 h-5 mr-3"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l-1-1m-4 4l-1-1m6-4v12a1 1 0 01-1 1H6a1 1 0 01-1-1V6a1 1 0 011-1h6a1 1 0 011 1zm-3 4a1 1 0 11-2 0 1 1 0 012 0z">
+                            </path>
+                        </svg><span>Text to Image</span></a>
+                    <a href="#" data-page="my-images" class="sidebar-link flex items-center p-3 rounded-lg"><svg
+                            class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                        </svg><span>My Images</span></a>
+                    <a href="#" data-page="liked-images" class="sidebar-link flex items-center p-3 rounded-lg"><svg
+                            class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                            </path>
+                        </svg><span>Liked Images</span></a>
+                    <a href="#" data-page="history" class="sidebar-link flex items-center p-3 rounded-lg"><svg
+                            class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg><span>History</span></a>
+                </div>
+
+                <div class="pt-4 mt-4 border-t border-[var(--border-color)]">
+                    <div class="flex items-center justify-between px-3">
+                        <p class="text-xs font-semibold uppercase text-gray-500 tracking-wider">Tools</p>
+                        <button id="toggle-tools" class="text-[var(--accent-primary)] text-sm">−</button>
+                    </div>
+                    <div id="tools-links" class="space-y-1 mt-2">
+                        <a href="#" data-page="prompt-assistant" class="sidebar-link flex items-center p-3 rounded-lg">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
+                                </path>
+                            </svg>
+                            <span>Prompt Assistant</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="generation-settings" class="pt-4 mt-4 border-t border-[var(--border-color)]">
+                    <div class="flex items-center justify-between px-3">
+                        <p class="text-xs font-semibold uppercase text-gray-500 tracking-wider">Settings</p>
+                        <button id="toggle-settings" class="text-[var(--accent-primary)] text-sm">−</button>
+                    </div>
+                    <div id="settings-links" class="space-y-1 mt-2">
+                        <div class="accordion-item rounded-lg">
+                            <button
+                                class="accordion-header w-full flex justify-between items-center p-3 font-semibold text-[var(--text-primary)]"><span>General</span><svg
+                                    class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="p-3 pt-0 space-y-3">
+                                    <div class="setting-item p-3 rounded-lg cursor-pointer flex items-center justify-between hover:bg-[var(--bg-card)]"
+                                        data-panel="aspect-ratio-panel">
+                                        <div>
+                                            <label class="text-sm text-[var(--text-primary)]">Aspect Ratio</label>
+                                            <div id="selected-aspect-ratio-container"
+                                                class="flex items-center gap-2 mt-1">
+                                                <div
+                                                    class="w-5 h-5 rounded-sm border-2 border-gray-500 flex items-center justify-center text-xs bg-gray-700">
+                                                </div>
+                                                <p id="selected-aspect-ratio"
+                                                    class="text-[var(--text-primary)] text-sm">1:1</p>
+                                            </div>
+                                        </div>
+                                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                    </div>
+                                    <div
+                                        class="flex items-center justify-between pt-3 border-t border-[var(--border-color)] mt-3">
+                                        <label class="text-sm">Enhance Prompt</label>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" id="enhance-prompt-toggle" value=""
+                                                class="sr-only peer">
+                                            <div
+                                                class="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--accent-primary)]">
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item rounded-lg">
+                            <button
+                                class="accordion-header w-full flex justify-between items-center p-3 font-semibold text-[var(--text-primary)]"><span>Style</span><svg
+                                    class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="p-3 pt-0 space-y-2">
+                                    <div class="setting-item p-3 rounded-lg cursor-pointer flex items-center justify-between hover:bg-[var(--bg-card)]"
+                                        data-panel="styles-panel">
+                                        <div>
+                                            <label class="text-sm text-[var(--text-primary)]">Effects</label>
+                                            <p id="selected-style" class="text-[var(--text-secondary)] text-sm">#none
+                                            </p>
+                                        </div>
+                                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="setting-item p-3 rounded-lg cursor-pointer flex items-center justify-between hover:bg-[var(--bg-card)]"
+                                        data-panel="lighting-panel">
+                                        <div>
+                                            <label class="text-sm text-[var(--text-primary)]">Lighting</label>
+                                            <p id="selected-lighting" class="text-[var(--text-secondary)] text-sm">#none
+                                            </p>
+                                        </div>
+                                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="setting-item p-3 rounded-lg cursor-pointer flex items-center justify-between hover:bg-[var(--bg-card)]"
+                                        data-panel="camera-panel">
+                                        <div>
+                                            <label class="text-sm text-[var(--text-primary)]">Camera</label>
+                                            <p id="selected-camera" class="text-[var(--text-secondary)] text-sm">#none
+                                            </p>
+                                        </div>
+                                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item rounded-lg">
+                            <button
+                                class="accordion-header w-full flex justify-between items-center p-3 font-semibold text-[var(--text-primary)]">
+                                <span>Image Guidance</span>
+                                <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="p-3 pt-0">
+                                    <div id="image-drop-zone"
+                                        class="h-32 mt-2 bg-[var(--bg-dark)] border-2 border-dashed border-gray-600 rounded-lg flex flex-col items-center justify-center text-center cursor-pointer hover:border-[var(--accent-primary)] transition-colors relative">
+                                        <div id="upload-placeholder" class="flex flex-col items-center justify-center">
+                                            <svg class="w-8 h-8 text-gray-500 mb-2" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M7 16a4 4 0 01-4-4V7a4 4 0 014-4h10a4 4 0 014 4v5a4 4 0 01-4 4H7z">
+                                                </path>
+                                            </svg>
+                                            <p class="text-xs">Drag image or click</p>
+                                        </div>
+                                        <img id="image-preview" src=""
+                                            class="hidden h-full w-full object-contain rounded-lg p-1">
+                                        <button id="remove-image-btn"
+                                            class="hidden absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">&times;</button>
+                                    </div>
+                                    <div class="mt-4 pt-3 border-t border-[var(--border-color)]">
+                                        <label for="image-strength-slider"
+                                            class="block text-sm font-medium text-[var(--text-primary)] mb-2">Image
+                                            Strength</label>
+                                        <div class="flex items-center gap-4">
+                                            <input type="range" id="image-strength-slider" min="0" max="1" step="0.05"
+                                                value="0.35"
+                                                class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer range-lg accent-[var(--accent-primary)]">
+                                            <span id="image-strength-value"
+                                                class="text-sm text-[var(--text-primary)] font-medium w-10 text-right">35%</span>
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1">Higher value makes the result look more
+                                            like the uploaded image.</p>
+                                    </div>
+
+
+
+                                    <input type="file" id="image-upload-input" class="hidden" accept="image/*">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item rounded-lg">
+                            <button
+                                class="accordion-header w-full flex justify-between items-center p-3 font-semibold text-[var(--text-primary)]">
+                                <span>Advance settings</span>
+                                <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="p-3 pt-0 space-y-2">
+                                    <label class="text-sm text-[var(--text-primary)]">Number of Images</label>
+                                    <div id="num-image-container"
+                                        class="flex justify-around bg-[var(--bg-dark)] p-1 rounded-lg border border-[var(--border-color)]">
+                                        <button
+                                            class="num-btn flex-1 py-1 rounded-md bg-[var(--accent-primary)] text-black"
+                                            data-value="1">1</button>
+                                        <button
+                                            class="num-btn flex-1 py-1 rounded-md bg-transparent text-[var(--text-secondary)]"
+                                            data-value="2">2</button>
+                                        <button
+                                            class="num-btn flex-1 py-1 rounded-md bg-transparent text-[var(--text-secondary)]"
+                                            data-value="3">3</button>
+                                        <button
+                                            class="num-btn flex-1 py-1 rounded-md bg-transparent text-[var(--text-secondary)]"
+                                            data-value="4">4</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4 mt-4 border-t border-[var(--border-color)]">
+                    <div class="flex items-center justify-between px-3">
+                        <p class="text-xs font-semibold uppercase text-gray-500 tracking-wider">Support</p>
+                        <button id="toggle-support" class="text-[var(--accent-primary)] text-sm">−</button>
+                    </div>
+                    <div id="support-links" class="space-y-1 mt-2">
+                        <a href="#" data-page="subscription" class="sidebar-link flex items-center p-3 rounded-lg">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
+                                </path>
+                            </svg>
+                            <span>Manage Subscription</span>
+                        </a>
+                        <a href="#" data-page="contact" class="sidebar-link flex items-center p-3 rounded-lg">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2z">
+                                </path>
+                            </svg>
+                            <span>Contact Us</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+        <!-- ================================== -->
+        <!-- ===== SIDEBAR END ===== -->
+        <!-- ================================== -->
+
+
+        <div class="flex-1 flex flex-col overflow-hidden relative">
+
+            <!-- HEADER -->
+            <header
+                class="flex-shrink-0 bg-[var(--bg-dark)] p-4 flex items-center border-b border-[var(--border-color)]">
+
+                <button id="menu-button" class="text-[var(--text-primary)]" aria-label="Toggle menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+
+                <div class="flex-1"></div>
+                <button id="search-icon-btn" class="text-[var(--text-primary)] p-2 rounded-full hover:bg-white/10 mr-4"
+                    aria-label="Search">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+                <!-- Account Dropdown -->
+                <div class="relative">
+                    <button id="account-button" class="flex items-center space-x-3" aria-label="Account menu"
+                        aria-expanded="false">
+                        <span id="user-status-badge"></span>
+                        <div id="user-avatar-wrapper" class="relative">
+                            <div id="user-avatar"
+                                class="w-10 h-10 rounded-full bg-[var(--bg-sidebar)] flex items-center justify-center font-bold text-[var(--accent-primary)] overflow-hidden">
+                                G
+                            </div>
+                        </div>
+                        <div id="user-details-wrapper">
+                            <span id="user-name" class="text-[var(--text-primary)] font-semibold">Guest User</span>
+                            <div id="credit-counter" class="text-xs text-[var(--accent-primary)]">Credits: 4</div>
+                        </div>
+                        <svg class="w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
+                    <div id="account-dropdown"
+                        class="hidden absolute right-0 mt-2 w-64 bg-[var(--bg-card)] rounded-lg shadow-lg p-4 z-50 border border-[var(--border-color)]">
+                        <div id="logged-out-view">
+                            <p class="text-center text-sm">You are browsing as a guest.</p>
+                            <a href="login_patched.html"
+                                class="block text-center mt-3 w-full bg-[var(--accent-primary)] text-black font-bold px-4 py-2 rounded-lg hover:bg-[var(--accent-secondary)] transition-colors">Sign
+                                In / Sign Up</a>
+                        </div>
+                        <div id="logged-in-view" class="hidden">
+                            <p class="font-semibold text-[var(--text-primary)] text-center" id="dropdown-username">
+                                Farhan Kureshi</p>
+                            <a href="#" id="sign-out-btn"
+                                class="block text-center mt-4 w-full bg-red-500 text-white font-bold px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">Sign
+                                Out</a>
+                        </div>
+                        <div class="border-t border-[var(--border-color)] my-4"></div>
+                        <div class="flex items-center justify-between"><span
+                                class="text-[var(--text-primary)]">Theme</span>
+                            <div class="flex items-center gap-1 p-1 bg-[var(--bg-dark)] rounded-md"><button
+                                    id="light-theme-btn" class="p-1 rounded text-lg"
+                                    aria-label="Light theme">☀️</button><button id="dark-theme-btn"
+                                    class="p-1 rounded text-lg bg-gray-700" aria-label="Dark theme">🌙</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable Main Area -->
+            <main id="main-content"
+                class="flex-1 overflow-x-hidden overflow-y-auto bg-[var(--bg-dark)] p-4 md:p-8 pb-24 custom-scrollbar">
+                <div id="page-search" class="page-view hidden">
+                    <h1 class="text-3xl font-bold text-white mb-6 headline">Search</h1>
+                    <div class="max-w-2xl mx-auto">
+                        <div class="relative">
+                            <input type="search" id="main-search-input" placeholder="Search pages, prompts, images..."
+                                class="w-full bg-[var(--bg-sidebar)] border border-[var(--border-color)] rounded-lg p-4 pl-12 text-white focus:ring-[var(--accent-primary)] focus:border-[var(--accent-primary)]">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div id="search-results-container" class="mt-6 space-y-4">
+                            <p class="text-center text-gray-500">Start typing to search...</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- PAGE: Text to Image -->
+                <div id="page-text-to-image" class="page-view">
+                    <div id="main-content-area" class="flex-1 w-full flex flex-col">
+                        <div id="welcome-screen"
+                            class="flex-1 flex flex-col items-center justify-center text-center p-4">
+                            <div class="typing-wrapper">
+                                <h1 id="welcome-message"
+                                    class="text-3xl font-extrabold bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent border-r-4 border-transparent animate-typing">
+                                    Welcome to RitHan AI, Guest User!
+                                </h1>
+                            </div>
+                            <p class="text-[var(--text-secondary)] mt-4">Your creative partner for generating
+                                amazing images.</p>
+                        </div>
+                        <div id="chat-view" class="hidden flex-1 flex flex-col">
+                            <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+                            <div id="typing-indicator" class="ai-message hidden px-4">
+                                <div class="message-bubble">
+                                    <div class="typing-dots"><span></span><span></span><span></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="prompt-area-wrapper" class="w-full">
+                        <div class="max-w-4xl mx-auto px-4">
+                            <div id="prompt-suggestions-box"
+                                class="hidden bg-[var(--bg-card)] p-4 rounded-lg border border-[var(--border-color)] mb-3">
+                                <h3 class="font-semibold text-[var(--text-primary)] mb-2">Prompt Suggestions</h3>
+                                <div id="prompt-suggestions-list"
+                                    class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar"></div>
+                                <button id="refresh-suggestions"
+                                    class="mt-3 text-[var(--accent-primary)] text-sm flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                                        </path>
+                                    </svg>
+                                    Refresh suggestions
+                                </button>
+                            </div>
+                            <div class="prompt-container mb-4">
+                                <div class="prompt-inner">
+                                    <button id="prompt-assistant-btn" title="Prompt Assistant"
+                                        class="p-2 rounded-full hover:bg-white/10 text-xl flex-shrink-0">✨</button>
+                                    <input id="prompt-input" type="text"
+                                        placeholder="Describe your ideas and generate..."
+                                        class="w-full bg-transparent text-[var(--text-primary)] placeholder-[var(--text-secondary)] px-3 focus:outline-none">
+                                    <button id="generate-btn"
+                                        class="generate-btn bg-[var(--accent-primary)] text-black font-semibold px-6 py-3 rounded-full flex-shrink-0 hover:bg-[var(--accent-secondary)] transition-all disabled:bg-gray-500 disabled:cursor-not-allowed">
+                                        Generate
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAGE: My Images -->
+                <div id="page-my-images" class="page-view hidden">
+                    <h1 class="text-3xl font-bold text-white mb-6 headline">My Images</h1>
+                    <div id="my-images-gallery-container"
+                        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+                    <div id="my-images-empty" class="text-center py-10">
+                        <svg class="w-16 h-16 mx-auto text-gray-500" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                        <p class="text-gray-400 mt-4 text-lg">You haven't generated any images yet.</p>
+                        <button
+                            class="mt-4 bg-[var(--accent-primary)] text-black px-6 py-2 rounded-lg font-semibold hover:bg-[var(--accent-secondary)] transition-colors"
+                            onclick="switchPage('text-to-image')">
+                            Start Creating
+                        </button>
+                    </div>
+                </div>
+
+`1
+                <!-- PAGE: Liked Images -->
+                <div id="page-liked-images" class="page-view hidden">
+                    <h1 class="text-3xl font-bold text-white mb-6 headline">Liked Images</h1>
+                    <div id="liked-images-gallery-container"
+                        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+                    <div id="liked-images-empty" class="text-center py-10">
+                        <svg class="w-16 h-16 mx-auto text-gray-500" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                            </path>
+                        </svg>
+                        <p class="text-gray-400 mt-4 text-lg">Explore the feed and like your favorites!</p>
+                        <button
+                            class="mt-4 bg-[var(--accent-primary)] text-black px-6 py-2 rounded-lg font-semibold hover:bg-[var(--accent-secondary)] transition-colors"
+                            onclick="switchPage('text-to-image')">
+                            Browse Community
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PAGE: History -->
+                <div id="page-history" class="page-view hidden">
+                    <h1 class="text-3xl font-bold text-white mb-6 headline">Prompt History</h1>
+                    <div id="history-container" class="space-y-3 max-w-4xl mx-auto"></div>
+                    <div id="history-empty" class="text-center py-10">
+                        <svg class="w-16 h-16 mx-auto text-gray-500" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-gray-400 mt-4 text-lg">Your prompt history is empty.</p>
+                    </div>
+                </div>
+
+                <!-- NEW PAGE: Prompt Assistant -->
+                <div id="page-prompt-assistant" class="page-view hidden">
+                    <h1 class="text-3xl font-bold text-white mb-6 headline">Prompt Assistant</h1>
+                    <div class="max-w-4xl mx-auto bg-[var(--bg-sidebar)] p-6 rounded-lg">
+                        <h2 class="text-xl font-semibold text-[var(--accent-primary)] mb-4">Generate creative
+                            prompts with AI</h2>
+                        <p class="mb-6">Describe what you're looking for, and our AI will suggest compelling
+                            prompts
+                            to use for image generation.</p>
+
+                        <div class="mb-6">
+                            <label for="prompt-idea"
+                                class="block text-sm font-medium text-[var(--text-primary)] mb-2">What
+                                kind of
+                                image
+                                do you want to create?</label>
+                            <textarea id="prompt-idea" rows="3"
+                                class="w-full bg-[var(--bg-dark)] border border-[var(--border-color)] rounded-lg p-3 text-white placeholder-gray-400 focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent"
+                                placeholder="e.g., A fantasy landscape with mountains and a river"></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label class="block text-sm font-medium text-[var(--text-primary)] mb-2">Style</label>
+                                <select id="style-select"
+                                    class="w-full bg-[var(--bg-dark)] border border-[var(--border-color)] rounded-lg p-3 text-white">
+                                    <option value="any">Any Style</option>
+                                    <option value="realistic">Photorealistic</option>
+                                    <option value="anime">Anime</option>
+                                    <option value="painting">Oil Painting</option>
+                                    <option value="digital">Digital Art</option>
+                                    <option value="sketch">Pencil Sketch</option>
+                                    <option value="cyberpunk">Cyberpunk</option>
+                                    <option value="fantasy">Fantasy</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-[var(--text-primary)] mb-2">Mood</label>
+                                <select id="mood-select"
+                                    class="w-full bg-[var(--bg-dark)] border border-[var(--border-color)] rounded-lg p-3 text-white">
+                                    <option value="any">Any Mood</option>
+                                    <option value="happy">Happy</option>
+                                    <option value="mysterious">Mysterious</option>
+                                    <option value="epic">Epic</option>
+                                    <option value="calm">Calm</option>
+                                    <option value="dark">Dark</option>
+                                    <option value="futuristic">Futuristic</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button id="generate-prompts"
+                            class="w-full bg-[var(--accent-primary)] text-black font-bold py-3 rounded-lg hover:bg-[var(--accent-secondary)] transition-colors">
+                            Generate Prompt Ideas
+                        </button>
+
+                        <div id="ai-prompts-result" class="mt-6 hidden">
+                            <h3 class="text-lg font-semibold text-[var(--text-primary)] mb-4">Suggested Prompts
+                            </h3>
+                            <div id="ai-prompts-list" class="space-y-3">
+                                <!-- AI generated prompts will appear here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAGE: Subscription -->
+                <div id="page-subscription" class="page-view hidden">
+                    <h1 class="text-3xl font-bold text-white mb-6 headline">Manage Subscription</h1>
+
+                    <!-- SECTION FOR GUEST USERS -->
+                    <div id="subscription-guest"
+                        class="hidden max-w-4xl mx-auto bg-[var(--bg-sidebar)] p-8 rounded-lg text-center">
+                        <h2 class="text-2xl font-semibold text-[var(--accent-primary)]">You are currently on the Guest
+                            Plan.</h2>
+                        <p class="mt-4">Sign in to unlock 100 credits and access premium features. Upgrade to our Pro
+                            plan for unlimited generations, faster processing, and commercial rights!</p>
+                        <a href="login_patched.html"
+                            class="inline-block mt-6 bg-[var(--accent-primary)] text-black font-bold px-8 py-3 rounded-lg hover:bg-[var(--accent-secondary)] transition-colors">
+                            Sign In / Sign Up
+                        </a>
+                    </div>
+
+                    <!-- SECTION FOR FREE LOGGED-IN USERS -->
+                    <div id="subscription-free"
+                        class="hidden max-w-4xl mx-auto bg-[var(--bg-sidebar)] p-8 rounded-lg text-center">
+                        <h2 class="text-2xl font-semibold text-yellow-400">You are on the Free Plan.</h2>
+                        <p class="mt-4">You have <strong id="free-credits-count" class="text-white">100</strong> credits
+                            remaining. Upgrade to our Pro plan for unlimited generations, faster processing, and
+                            commercial rights!</p>
+                        <a href="pricing.html"
+                            class="inline-block mt-6 bg-[var(--accent-primary)] text-black font-bold px-8 py-3 rounded-lg hover:bg-[var(--accent-secondary)] transition-colors">
+                            Upgrade to Pro
+                        </a>
+                    </div>
+
+                    <!-- SECTION FOR PRO USERS -->
+                    <div id="subscription-pro"
+                        class="hidden max-w-4xl mx-auto bg-[var(--bg-sidebar)] p-8 rounded-lg text-center">
+                        <h2 class="text-2xl font-semibold text-[var(--accent-primary)]">You are a PRO Member! ✨</h2>
+                        <p class="mt-4">You have unlimited generations, faster processing, and full commercial rights to
+                            your creations. Thank you for your support!</p>
+                        <button
+                            class="inline-block mt-6 bg-gray-600 text-white font-bold px-8 py-3 rounded-lg cursor-not-allowed">
+                            Manage Billing (Coming Soon)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PAGE: Contact Us -->
+                <div id="page-contact" class="page-view hidden">
+                    <h1 class="text-3xl font-bold text-white mb-6 headline">Contact Us</h1>
+                    <div class="max-w-4xl mx-auto bg-[var(--bg-sidebar)] p-8 rounded-lg">
+
+                        <h2 class="text-xl font-semibold text-white mb-4">Send Us a Message</h2>
+                        <p class="text-gray-400 mb-6">Have a question or feedback? Fill out the form below and we'll get
+                            back to you as soon as possible.</p>
+
+                        <form id="contact-form" class="space-y-4">
+                            <div>
+                                <label for="contact-name"
+                                    class="block text-sm font-medium text-[var(--text-primary)] mb-2">Your Name</label>
+                                <input type="text" id="contact-name" name="name" required
+                                    class="w-full bg-[var(--bg-dark)] border border-[var(--border-color)] rounded-lg p-3 text-white focus:ring-[var(--accent-primary)] focus:border-[var(--accent-primary)]"
+                                    placeholder="Your Name">
+                            </div>
+                            <div>
+                                <label for="contact-email"
+                                    class="block text-sm font-medium text-[var(--text-primary)] mb-2">Your Email</label>
+                                <input type="email" id="contact-email" name="email" required
+                                    class="w-full bg-[var(--bg-dark)] border border-[var(--border-color)] rounded-lg p-3 text-white focus:ring-[var(--accent-primary)] focus:border-[var(--accent-primary)]"
+                                    placeholder="aap@example.com">
+                            </div>
+                            <div>
+                                <label for="contact-message"
+                                    class="block text-sm font-medium text-[var(--text-primary)] mb-2">Message</label>
+                                <textarea id="contact-message" name="message" rows="5" required
+                                    class="w-full bg-[var(--bg-dark)] border border-[var(--border-color)] rounded-lg p-3 text-white focus:ring-[var(--accent-primary)] focus:border-[var(--accent-primary)]"
+                                    placeholder="Your message..."></textarea>
+                            </div>
+                            <div>
+                                <button type="submit"
+                                    class="w-full bg-[var(--accent-primary)] text-black font-bold py-3 px-6 rounded-lg hover:bg-[var(--accent-secondary)] transition-colors">
+                                    Send Message
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="relative flex py-5 items-center">
+                            <div class="flex-grow border-t border-gray-600"></div>
+                            <span class="flex-shrink mx-4 text-gray-400">OR</span>
+                            <div class="flex-grow border-t border-gray-600"></div>
+                        </div>
+
+                        <div class="text-center">
+                            <h3 class="text-lg font-semibold text-white mb-4">Connect with us</h3>
+                            <div class="flex justify-center items-center space-x-6">
+                                <a href="mailto:kureshif624@gmail.com"
+                                    class="text-gray-400 hover:text-[var(--accent-primary)] transition-colors"
+                                    title="Email Us">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                                        </path>
+                                    </svg>
+                                </a>
+                                <a href="https://x.com/Farhan_Kureshi7"
+                                    class="text-gray-400 hover:text-[var(--accent-primary)] transition-colors"
+                                    title="Twitter">
+                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z">
+                                        </path>
+                                    </svg>
+                                </a>
+                                <a href="https://github.com/farhan-kureshi"
+                                    class="text-gray-400 hover:text-[var(--accent-primary)] transition-colors"
+                                    title="GitHub">
+                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                                        <path fill-rule="evenodd"
+                                            d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.165 6.839 9.49.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.951 0-1.093.39-1.988 1.03-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.84c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.026 2.747-1.026.546 1.379.202 2.398.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <div id="lightbox-overlay"
+        class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-[60] transition-opacity duration-300">
+        <span id="lightbox-close"
+            class="absolute top-4 right-6 text-white text-5xl cursor-pointer hover:text-gray-400">&times;</span>
+        <img id="lightbox-image" src="" alt="Image Preview" class="max-w-[90vw] max-h-[90vh] rounded-lg shadow-2xl">
+    </div>
+
+    <script src="/js/Dashboard.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Saare zaroori elements ko yahan select kiya gaya hai
+            const toolIds = ['tools-links', 'toggle-tools'];
+            const settingIds = ['settings-links', 'generation-settings', 'settings-panel-container', 'toggle-settings'];
+
+            // Yeh function Pro features ko hide/show karta hai
+            function setProtectedVisible(isVisible) {
+                const ids = [...toolIds, ...settingIds];
+                ids.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    if (isVisible) {
+                        el.classList.remove('hidden');
+                        el.style.display = '';
+                    } else {
+                        el.classList.add('hidden');
+                        el.style.display = 'none';
+                    }
+                });
+            }
+
+            // === YEH SABSE ZAROORI FUNCTION HAI ===
+            function updateUIAfterAuth(userData) {
+                const nameEl = document.getElementById('user-name');
+                const ddNameEl = document.getElementById('dropdown-username');
+                const welcomeMsg = document.getElementById("welcome-message");
+                const creditCounter = document.getElementById('credit-counter');
+                const userAvatarEl = document.getElementById('user-avatar');
+                const avatarWrapper = document.getElementById('user-avatar-wrapper');
+                const statusBadge = document.getElementById('user-status-badge');
+                const userDetailsWrapper = document.getElementById('user-details-wrapper');
+
+                const isLoggedIn = userData && userData.loggedIn;
+                const isPro = isLoggedIn && userData.isPro;
+                const name = isLoggedIn ? (userData.name || 'User') : 'Guest User';
+                const credits = isLoggedIn ? userData.credits : 4;
+
+                // User details update
+                if (nameEl) nameEl.textContent = name;
+                if (ddNameEl) ddNameEl.textContent = name;
+                if (welcomeMsg) {
+                    welcomeMsg.textContent = `Welcome to RitHan AI, ${name}!`;
+                    welcomeMsg.classList.remove('animate-typing');
+                    void welcomeMsg.offsetWidth;
+                    welcomeMsg.classList.add('animate-typing');
+                }
+
+                if (creditCounter) {
+                    if (isPro) {
+                        creditCounter.innerHTML = `Credits: <span class="animated-unlimited">Unlimited</span>`;
+                    } else {
+                        creditCounter.textContent = `Credits: ${credits}`;
+                    }
+                }
+
+                if (userAvatarEl) {
+                    const picUrl = userData.profile_pic;
+                    if (picUrl) {
+                        userAvatarEl.innerHTML = `<img src="${picUrl}" alt="${name}" class="w-full h-full rounded-full object-cover">`;
+                    } else {
+                        userAvatarEl.textContent = name.charAt(0).toUpperCase();
+                    }
+                }
+
+                // Reset all classes first
+                statusBadge.className = '';
+                avatarWrapper.className = 'relative';
+
+                if (isLoggedIn) {
+                    statusBadge.classList.add('status-badge');
+                    if (userDetailsWrapper) userDetailsWrapper.classList.remove('hidden');
+                    if (isPro) {
+                        statusBadge.textContent = 'PRO';
+                        statusBadge.classList.add('pro-badge');
+                        avatarWrapper.classList.add('pro-avatar-border');
+                    } else {
+                        statusBadge.textContent = 'FREE';
+                        statusBadge.classList.add('free-badge');
+                        avatarWrapper.classList.add('free-avatar-border');
+                    }
+                } else {
+                    statusBadge.textContent = '';
+                    avatarWrapper.classList.remove('pro-avatar-border', 'free-avatar-border');
+                    if (userDetailsWrapper) userDetailsWrapper.classList.remove('hidden');
+                }
+
+                const loggedOutView = document.getElementById("logged-out-view");
+                const loggedInView = document.getElementById("logged-in-view");
+
+                if (isLoggedIn) {
+                    localStorage.setItem('RitHan_user', JSON.stringify(userData));
+                    setProtectedVisible(true);
+                    if (loggedOutView) loggedOutView.classList.add("hidden");
+                    if (loggedInView) loggedInView.classList.remove("hidden");
+                } else {
+                    localStorage.removeItem('RitHan_user');
+                    setProtectedVisible(false);
+                    if (loggedOutView) loggedOutView.classList.remove("hidden");
+                    if (loggedInView) loggedInView.classList.add("hidden");
+                }
+            }
+
+            async function checkAuthStatus() {
+                try {
+                    const res = await fetch('/check-auth', { credentials: 'include' });
+                    const data = await res.json();
+
+                    if (data.loggedIn) {
+                        const profileRes = await fetch('/api/user/profile', { credentials: 'include' });
+                        if (!profileRes.ok) throw new Error('Failed to fetch profile');
+                        const profileData = await profileRes.json();
+
+                        if (window.state) {
+                            window.state.isLoggedIn = true;
+                            window.state.userName = profileData.fullname;
+                            window.state.credits = profileData.credits;
+                            window.state.isPro = profileData.isPro;
+                        }
+                        updateUIAfterAuth({
+                            loggedIn: true,
+                            name: profileData.fullname,
+                            credits: profileData.credits,
+                            isPro: profileData.isPro,
+                            profile_pic: profileData.profile_pic
+                        });
+                        if (window.fetchUserData) {
+                            window.fetchUserData();
+                        }
+                    } else {
+                        updateUIAfterAuth({ loggedIn: false });
+                    }
+                } catch (e) {
+                    console.error('Auth check failed:', e);
+                    updateUIAfterAuth({ loggedIn: false });
+                }
+            }
+
+            async function handleLogout() {
+                try {
+                    await fetch('/logout', { method: 'POST', credentials: 'include' });
+                } catch (e) {
+                    console.warn('Logout error', e);
+                } finally {
+                    updateUIAfterAuth({ loggedIn: false });
+                    window.location.href = 'index.html';
+                }
+            }
+
+            setProtectedVisible(false);
+            const signOutBtn = document.getElementById('sign-out-btn');
+            if (signOutBtn) signOutBtn.addEventListener('click', handleLogout);
+            checkAuthStatus();
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - RitHan AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="images/logo-1.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            /* Prevents scrollbars from animation */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .headline {
+            font-family: 'Space Grotesk', Inter, sans-serif;
+        }
+
+        /* --- Animated Background --- */
+        #animation-section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2px;
+            flex-wrap: wrap;
+            overflow: hidden;
+        }
+
+        #animation-section::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(#0B0C10, #66FCF1, #0B0C10);
+            animation: animate 5s linear infinite;
+        }
+
+        @keyframes animate {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        #animation-section span {
+            position: relative;
+            display: block;
+            width: calc(6.25vw - 2px);
+            height: calc(6.25vw - 2px);
+            background: #181818;
+            z-index: 2;
+            transition: 1.5s;
+        }
+
+        #animation-section span:hover {
+            background: #66FCF1;
+            transition: 0s;
+        }
+
+        /* --- Signup Box --- */
+        .signup {
+            position: relative;
+            width: 90%;
+            max-width: 450px;
+            background: #222;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+
+        .signup .content {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 25px;
+            /* Thoda kam gap */
+        }
+
+        .signup .content h2 {
+            font-size: 2em;
+            color: #66FCF1;
+            text-transform: uppercase;
+        }
+
+        .signup .content .form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            /* Thoda kam gap */
+        }
+
+        .signup .content .form .inputBox {
+            position: relative;
+            width: 100%;
+        }
+
+        .signup .content .form .inputBox input {
+            position: relative;
+            width: 100%;
+            background: #333;
+            border: none;
+            outline: none;
+            padding: 25px 10px 7.5px;
+            border-radius: 4px;
+            color: #fff;
+            font-weight: 500;
+            font-size: 1em;
+        }
+
+        .signup .content .form .inputBox i {
+            position: absolute;
+            left: 0;
+            padding: 15px 10px;
+            font-style: normal;
+            color: #aaa;
+            transition: 0.5s;
+            pointer-events: none;
+        }
+
+        /* NAYA AUR SAHI CSS RULE */
+        .signup .content .form .inputBox input:focus~i,
+        .signup .content .form .inputBox input:not(:placeholder-shown)~i {
+            transform: translateY(-7.5px);
+            font-size: 0.8em;
+            color: #fff;
+        }
+
+        .signup .content .form .links {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .signup .content .form .links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .signup .content .form .links a:hover {
+            color: #66FCF1;
+        }
+
+        .signup .content .form .links a:nth-child(2) {
+            color: #66FCF1;
+            font-weight: 600;
+        }
+
+        .signup .content .form .inputBox input[type="submit"] {
+            padding: 10px;
+            background: #66FCF1;
+            color: #000;
+            font-weight: 600;
+            font-size: 1.25em;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .signup .content .form .inputBox input[type="submit"]:hover {
+            background: #45A29E;
+        }
+
+        /* --- Dark/Light Mode Styles --- */
+        body.dark-mode {
+            background-color: #0B0C10;
+        }
+
+        body.light-mode {
+            background-color: #f5f7fa;
+        }
+
+        .light-mode #animation-section::before {
+            background: linear-gradient(#e2e8f0, #3182ce, #e2e8f0);
+        }
+
+        .light-mode #animation-section span {
+            background: #e2e8f0;
+        }
+
+        .light-mode #animation-section span:hover {
+            background: #3182ce;
+        }
+
+        .light-mode .signup {
+            background: #f0f0f0;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .light-mode .signup .content h2 {
+            color: #3182ce;
+        }
+
+        .light-mode .signup .content .form .inputBox input {
+            background: #e0e0e0;
+            color: #1a1a1a;
+        }
+
+        .light-mode .signup .content .form .inputBox i {
+            color: #888;
+        }
+
+        .light-mode .signup .content .form .inputBox input:focus~i,
+        .light-mode .signup .content .form .inputBox input:valid~i {
+            color: #1a1a1a;
+        }
+
+        .light-mode .signup .content .form .links a {
+            color: #1a1a1a;
+        }
+
+        .light-mode .signup .content .form .links a:nth-child(2) {
+            color: #3182ce;
+        }
+
+        .light-mode .signup .content .form .inputBox input[type="submit"] {
+            background: #3182ce;
+            color: #fff;
+        }
+
+        .light-mode .signup .content .form .inputBox input[type="submit"]:hover {
+            background: #2b6cb0;
+        }
+
+        .light-mode .terms-label {
+            color: #333;
+        }
+
+        .light-mode .terms-label a {
+            color: #3182ce;
+        }
+
+        /* --- Social Login Buttons --- */
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px;
+            background: #333;
+            border-radius: 4px;
+            color: #fff;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .social-btn:hover {
+            background: #444;
+        }
+
+        /* ... Light mode styles for social button ... */
+        .light-mode .social-btn {
+            background: #e0e0e0;
+            color: #1a1a1a;
+        }
+
+        .light-mode .social-btn:hover {
+            background: #d0d0d0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 900px) {
+            #animation-section span {
+                width: calc(10vw - 2px);
+                height: calc(10vw - 2px);
+            }
+        }
+
+        @media (max-width: 600px) {
+            #animation-section span {
+                width: calc(20vw - 2px);
+                height: calc(20vw - 2px);
+            }
+        }
+    </style>
+</head>
+
+<body class="dark-mode">
+
+    <!-- Minimal Header -->
+    <header id="main-header" class="fixed w-full top-0 z-[1001] transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-2">
+                <img src="images/logo-1.png" alt="RitHan AI Logo" class="w-10 h-10"
+                    onerror="this.onerror=null;this.src='https://placehold.co/40x40/0B0C10/66FCF1?text=P';">
+            </a>
+            <button id="modeToggle"
+                class="flex items-center justify-center w-10 h-10 rounded-full bg-black/20 hover:bg-black/40 transition-colors">
+                <svg id="sunIcon" class="w-5 h-5 text-[#66FCF1] hidden" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                        clip-rule="evenodd" />
+                </svg>
+                <svg id="moonIcon" class="w-5 h-5 text-[#66FCF1]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                    fill="currentColor">
+                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <section id="animation-section">
+        <!-- Spans for animation will be generated by JS -->
+    </section>
+
+    <div class="signup">
+        <div class="content">
+            <h2 class="headline">Sign Up</h2>
+            <form class="form" id="signup-form" method="POST" action="/signup">
+                <div class="inputBox">
+                    <input type="text" id="fullname" name="fullname" required placeholder=" ">
+                    <i>Full Name</i>
+                </div>
+                <div class="inputBox">
+                    <input type="email" id="email" name="email" required placeholder=" ">
+                    <i>Email</i>
+                </div>
+                <div class="inputBox">
+                    <input type="password" id="password" name="password" required minlength="6" placeholder=" ">
+                    <i>Password</i>
+                    <button type="button" id="togglePassword"
+                        class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-400 hover:text-white">
+                        <svg id="eyeIcon" class="w-5 h-5" xmlns="http://www.w.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <svg id="eyeSlashIcon" class="w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.572M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21L3 3" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="checkbox" id="terms" class="w-4 h-4 accent-[#66FCF1]">
+                    <label for="terms" class="text-xs text-gray-400">I agree to Terms & Conditions</label>
+                </div>
+                <div class="inputBox">
+                    <input type="submit" value="Create Account">
+                </div>
+            </form>
+            <div class="relative flex py-2 items-center">
+                <div class="flex-grow border-t border-gray-600"></div>
+                <span class="flex-shrink mx-4 text-gray-400 text-xs">OR</span>
+                <div class="flex-grow border-t border-gray-600"></div>
+            </div>
+
+            <div class="w-full flex flex-col space-y-3">
+                <a href="/login/google" class="social-btn">
+                    <img src="https://www.vectorlogo.zone/logos/google/google-icon.svg" class="w-5 h-5 mr-3"
+                        alt="Google icon">
+                    Continue with Google
+                </a>
+
+                <a href="#" class="social-btn" style="cursor: not-allowed; opacity: 0.6;">
+                    <img src="https://www.vectorlogo.zone/logos/microsoft/microsoft-icon.svg" class="w-5 h-5 mr-3"
+                        alt="Microsoft icon">
+                    Continue with Microsoft
+                </a>
+
+                <a href="#" class="social-btn" style="cursor: not-allowed; opacity: 0.6;">
+                    <img src="https://www.vectorlogo.zone/logos/apple/apple-icon.svg" class="w-5 h-5 mr-3"
+                        alt="Apple icon">
+                    Continue with Apple
+                </a>
+            </div>
+            <p class="text-xs text-center text-gray-400">
+                Already have an account?
+                <a href="login_patched.html" class="font-semibold text-[#66FCF1] hover:underline">Sign In</a>
+            </p>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- GENERATE ANIMATION SPANS ---
+            const section = document.getElementById('animation-section');
+            for (let i = 0; i < 256; i++) {
+                const span = document.createElement('span');
+                section.appendChild(span);
+            }
+
+            // --- THEME TOGGLE LOGIC ---
+            const modeToggle = document.getElementById('modeToggle');
+            const sunIcon = document.getElementById('sunIcon');
+            const moonIcon = document.getElementById('moonIcon');
+            const body = document.body;
+
+            function enableLightMode() {
+                body.classList.remove('dark-mode'); body.classList.add('light-mode');
+                sunIcon.classList.remove('hidden'); moonIcon.classList.add('hidden');
+                localStorage.setItem('colorMode', 'light');
+            }
+
+            function enableDarkMode() {
+                body.classList.remove('light-mode'); body.classList.add('dark-mode');
+                moonIcon.classList.remove('hidden'); sunIcon.classList.add('hidden');
+                localStorage.setItem('colorMode', 'dark');
+            }
+
+            const savedMode = localStorage.getItem('colorMode');
+            if (savedMode === 'light') {
+                enableLightMode();
+            } else {
+                enableDarkMode();
+            }
+
+            modeToggle.addEventListener('click', () => {
+                if (body.classList.contains('dark-mode')) {
+                    enableLightMode();
+                } else {
+                    enableDarkMode();
+                }
+            });
+        });
+    </script>
+
+    <!-- ADDED: fetch-based signup handler -->
+    <script>
+        (function () {
+            const form = document.getElementById("signup-form");
+            if (!form) return;
+            form.addEventListener("submit", async function (e) {
+                e.preventDefault();
+                const fullname = document.getElementById("fullname").value.trim();
+                const email = document.getElementById("email").value.trim();
+                const password = document.getElementById("password").value;
+                const terms = document.getElementById("terms").checked;
+
+                let msg = document.getElementById("signup-msg");
+                if (!msg) {
+                    msg = document.createElement("p");
+                    msg.id = "signup-msg";
+                    msg.style.marginTop = "8px";
+                    form.appendChild(msg);
+                }
+
+                if (!terms) {
+                    msg.textContent = "You must agree to the Terms & Conditions.";
+                    msg.style.color = "red";
+                    return;
+                }
+                if (password.length < 8) {
+                    msg.textContent = "Password must be at least 8 characters.";
+                    msg.style.color = "red";
+                    return;
+                }
+
+                try {
+                    const res = await fetch("http://127.0.0.1:5000/signup", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", credentials: "include" },
+                        body: JSON.stringify({ fullname, email, password, credentials: "include" })
+                    });
+                    const data = await res.json();
+                    if (!res.ok || data.error) {
+                        msg.textContent = data.error || "Signup failed.";
+                        msg.style.color = "red";
+                        return;
+                    }
+                    msg.textContent = data.message || "OTP sent! Redirecting...";
+                    msg.style.color = "#66FCF1";
+
+                    // YEH LINE BADLI GAYI HAI
+                    setTimeout(() => { window.location.href = `otp_verify.html?email=${encodeURIComponent(email)}`; }, 1500);
+
+                } catch (err) {
+                    console.error(err);
+                    msg.textContent = "Network error. Is the backend running?";
+                    msg.style.color = "red";
+                }
+            });
+        })
+            ();
+    </script>
+
+    <script id="password-toggle-setup">
+        document.addEventListener('DOMContentLoaded', function () {
+            const passwordInput = document.getElementById('password');
+            const togglePasswordBtn = document.getElementById('togglePassword');
+            const eyeIcon = document.getElementById('eyeIcon');
+            const eyeSlashIcon = document.getElementById('eyeSlashIcon');
+
+            if (togglePasswordBtn) {
+                togglePasswordBtn.addEventListener('click', () => {
+                    const isPassword = passwordInput.type === 'password';
+                    passwordInput.type = isPassword ? 'text' : 'password';
+
+                    // Icon ko badalna
+                    eyeIcon.classList.toggle('hidden', isPassword);
+                    eyeSlashIcon.classList.toggle('hidden', !isPassword);
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>

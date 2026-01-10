@@ -1,0 +1,4 @@
+.env
+RitHan.db
+__pycache__/
+venv/

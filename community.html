@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RitHan AI - Community Creations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="images/logo-1.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Dark Mode Default Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0B0C10;
+            color: #C5C6C7;
+        }
+        .headline { font-family: 'Space Grotesk', Inter, sans-serif; }
+        .headline-gradient-dark {
+            background: linear-gradient(90deg, #66FCF1 0%, #7C83FF 45%, #A78BFA 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .btn-primary { background-color: #66FCF1; color: #0B0C10; transition: all 0.3s ease; }
+        .btn-primary:hover { background-color: #45A29E; }
+        .btn-secondary { border: 1px solid #45A29E; color: #66FCF1; transition: all 0.3s ease; }
+        .btn-secondary:hover { background-color: #45A29E; color: #0B0C10; }
+
+        /* Gallery Styles */
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .gallery-item .overlay {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .gallery-item:hover .overlay {
+            opacity: 1;
+        }
+        .gallery-item img {
+            transition: transform 0.3s ease;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        .filter-btn {
+            transition: all 0.2s ease;
+        }
+        .filter-btn.active {
+            background-color: #66FCF1;
+            color: #0B0C10;
+            font-weight: 600;
+        }
+        
+        /* Light Mode Styles */
+        .light-mode { background-color: #f5f7fa; color: #1a1a1a; }
+        .light-mode .text-white { color: #1a1a1a !important; }
+        .light-mode .text-gray-400 { color: #4a5568 !important; }
+        .light-mode .bg-gradient-to-b { background: linear-gradient(180deg, #e2e8f0 0%, #f5f7fa 100%); }
+        .light-mode .headline-gradient-dark {
+            background: linear-gradient(90deg, #2563EB 0%, #7C3AED 50%, #06B6D4 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .light-mode .btn-primary { background-color: #3182ce; color: white; }
+        .light-mode .btn-primary:hover { background-color: #2b6cb0; }
+        .light-mode .btn-secondary { border: 1px solid #3182ce; color: #3182ce; }
+        .light-mode .btn-secondary:hover { background-color: #3182ce; color: white; }
+        .light-mode header, .light-mode footer { background-color: #e2e8f0 !important; }
+        .light-mode #main-header { background-color: rgba(255, 255, 255, 0.8); }
+        .light-mode .filter-btn { background-color: #e2e8f0; color: #4a5568; }
+        .light-mode .filter-btn.active { background-color: #3182ce; color: white; }
+    </style>
+</head>
+
+<body class="dark-mode">
+
+    <!-- HEADER with Theme Toggle -->
+    <header id="main-header" class="fixed w-full top-0 z-50 transition-all duration-300 bg-black/30 backdrop-blur-md">
+         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-2">
+                <img src="images/logo-1.png" alt="RitHan AI Logo" class="w-10 h-10">
+                <h1 class="text-2xl font-bold text-white">RitHan AI</h1>
+            </a>
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="index.html" class="hover:text-[#66FCF1] transition-colors">Home</a>
+                <a href="features.html" class="hover:text-[#66FCF1] transition-colors">Features</a>
+                <a href="pricing.html" class="hover:text-[#66FCF1] transition-colors">Pricing</a>
+                <a href="community.html" class="text-[#66FCF1] font-semibold transition-colors">Community</a>
+            </nav>
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="login_patched.html" class="btn-secondary px-4 py-2 rounded-lg font-semibold">Sign In</a>
+                <a href="Dashboard.html" class="btn-primary px-4 py-2 rounded-lg font-semibold">Get Started</a>
+                <button id="modeToggle" class="flex items-center justify-center w-10 h-10 rounded-full bg-[#1F2833] hover:bg-[#45A29E] transition-colors">
+                    <svg id="sunIcon" class="w-5 h-5 text-[#66FCF1] hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" /></svg>
+                    <svg id="moonIcon" class="w-5 h-5 text-[#66FCF1]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="pt-32 pb-16 text-center bg-gradient-to-b from-[#1F2833] to-[#0B0C10]">
+            <div class="container mx-auto px-6">
+                <h1 class="headline text-4xl md:text-6xl font-extrabold text-white">
+                    Explore the <span class="headline-gradient-dark">Art of AI</span>
+                </h1>
+                <p class="mt-6 max-w-2xl mx-auto text-lg text-gray-400">
+                    Discover incredible artwork created by the RitHan AI community. Get inspired, see what's possible, and start your own creative journey.
+                </p>
+            </div>
+        </section>
+
+        <!-- Filterable Gallery -->
+        <section class="py-16">
+            <div class="container mx-auto px-6">
+                <!-- Filter Buttons -->
+                <div id="filter-buttons" class="flex flex-wrap justify-center gap-2 md:gap-4 mb-10">
+                    <button class="filter-btn active px-4 py-2 rounded-full text-sm font-medium" data-filter="all">All</button>
+                    <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium" data-filter="trending">Trending</button>
+                    <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium" data-filter="photorealistic">Photorealistic</button>
+                    <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium" data-filter="anime">Anime</button>
+                    <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium" data-filter="abstract">Abstract</button>
+                    <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium" data-filter="fantasy">Fantasy</button>
+                </div>
+
+                <!-- Image Grid -->
+                <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- Images will be injected by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action Section -->
+        <section class="py-20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="headline text-3xl md:text-4xl font-bold text-white">Feeling Inspired?</h2>
+                <p class="mt-4 max-w-xl mx-auto text-lg text-gray-400">It's your turn to create. Join our community and bring your wildest ideas to life.</p>
+                <a href="Dashboard.html" class="mt-8 btn-primary font-bold px-8 py-4 rounded-lg inline-block">
+                    Start Generating Now
+                </a>
+            </div>
+        </section>
+    </main>
+
+    
+ <!-- Footer -->
+            <!-- Updated Footer with Social Media Icons -->
+    <footer class="bg-[#1F2833] pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+                <div class="lg:col-span-2">
+                    <div class="flex items-center space-x-2">
+                        <img src="images/logo-1.png" alt="RitHan AI Logo" class="w-8 h-8" onerror="this.onerror=null;this.src='https://placehold.co/32x32/0B0C10/66FCF1?text=P';">
+                        <h1 class="text-2xl font-bold text-white">RitHan AI</h1>
+                    </div>
+                    <p class="mt-4 max-w-xs text-gray-400">Endless possibilities, just imagine. The most powerful AI photo generator, in your hands.</p>
+                    <div class="mt-6 flex space-x-4">
+                        <a href="https://www.instagram.com/Farhan_Kureshi2607/" target="_blank" class="text-gray-400 hover:text-white" aria-label="Instagram"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.069-1.645-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664-4.771 4.919-4.919C8.416 2.175 8.796 2.163 12 2.163zm0 1.802c-3.116 0-3.472.01-4.695.065-2.555.115-3.837 1.4-3.953 3.953-.055 1.22-.065 1.575-.065 4.695s.01 3.472.065 4.695c.115 2.555 1.4 3.837 3.953 3.953 1.22.055 1.575.065 4.695.065s3.472-.01 4.695-.065c2.555-.115 3.837-1.4 3.953-3.953.055-1.22.065-1.575.065-4.695s-.01-3.472-.065-4.695c-.115-2.555-1.4-3.837-3.953-3.953-1.22-.055-1.575-.065-4.695-.065zm0 4.625a5.412 5.412 0 100 10.824 5.412 5.412 0 000-10.824zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.88 1.44 1.44 0 000-2.88z"/></svg></a>
+                        <a href="https://x.com/Farhan_Kureshi7" target="_blank" class="text-gray-400 hover:text-white" aria-label="X/Twitter"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M14.258 10.152L23.176 0h-2.113l-7.747 8.813L7.13 0H0l9.308 13.324L0 24h2.113l8.17-9.309L16.87 24h7.13L14.258 10.152zM11.46 12.38H9.95L3.038 1.36h3.32l5.828 8.342h1.51l7.053 11.078h-3.32L11.46 12.38z"/></svg></a>
+                        <a href="https://www.linkedin.com/in/farhankureshi/" target="_blank" class="text-gray-400 hover:text-white" aria-label="LinkedIn"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+                        <a href="https://github.com/farhan-kureshi" target="_blank" class="text-gray-400 hover:text-white" aria-label="GitHub"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
+                    </div>
+                </div>
+                <div><h5 class="font-bold text-white text-lg mb-4">Imagine</h5><ul class="space-y-3"><li><a href="#" class="text-gray-400 hover:text-white">Blogs</a></li><li><a href="community.html" class="text-gray-400 hover:text-white">Community</a></li><li><a href="features.html" class="text-gray-400 hover:text-white">Our Tools</a></li><li><a href="#" class="text-gray-400 hover:text-white">Mobile App</a></li></ul></div>
+                <div><h5 class="font-bold text-white text-lg mb-4">Company</h5><ul class="space-y-3"><li><a href="#" class="text-gray-400 hover:text-white">Affiliate Program</a></li><li><a href="#" class="text-gray-400 hover:text-white">Imagine API</a></li><li><a href="#" class="text-gray-400 hover:text-white">Contact Us</a></li><li><a href="#" class="text-gray-400 hover:text-white">About Us</a></li></ul></div>
+                <div><h5 class="font-bold text-white text-lg mb-4">Legal</h5><ul class="space-y-3"><li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li><li><a href="#" class="text-gray-400 hover:text-white">Terms & Conditions</a></li><li><a href="#" class="text-gray-400 hover:text-white">Refund Policy</a></li></ul></div>
+            </div>
+            <hr class="my-8 border-gray-700">
+            <div class="text-center text-gray-400">
+                <p>Made with ❤️ by Farhan Kureshi & Ritu Modi.</p>
+                <p class="text-sm mt-1">© 2025 RitHan AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- THEME TOGGLE LOGIC ---
+            const modeToggle = document.getElementById('modeToggle');
+            const sunIcon = document.getElementById('sunIcon');
+            const moonIcon = document.getElementById('moonIcon');
+            const body = document.body;
+            const savedMode = localStorage.getItem('colorMode');
+            if (savedMode === 'light') { enableLightMode(); } else { enableDarkMode(); }
+            modeToggle.addEventListener('click', () => {
+                if (body.classList.contains('dark-mode')) { enableLightMode(); } else { enableDarkMode(); }
+            });
+            function enableLightMode() {
+                body.classList.remove('dark-mode'); body.classList.add('light-mode');
+                sunIcon.classList.remove('hidden'); moonIcon.classList.add('hidden');
+                localStorage.setItem('colorMode', 'light');
+            }
+            function enableDarkMode() {
+                body.classList.remove('light-mode'); body.classList.add('dark-mode');
+                moonIcon.classList.remove('hidden'); sunIcon.classList.add('hidden');
+                localStorage.setItem('colorMode', 'dark');
+            }
+
+            // --- GALLERY LOGIC ---
+            const galleryGrid = document.getElementById('gallery-grid');
+            const filterButtons = document.getElementById('filter-buttons');
+
+            // Image data from your index.html file
+            const images = [
+                // Trending
+                { src: 'images/trending-1.png', category: 'trending', prompt: 'A portrait of a futuristic girl with glowing cybernetic eyes.' },
+                { src: 'images/trending-2.png', category: 'trending', prompt: 'A stylish wolf wearing a black leather jacket.' },
+                { src: 'images/trending-3.webp', category: 'trending', prompt: 'A girl wearing a VR headset in a futuristic city.' },
+                { src: 'images/trending-4.jpg', category: 'trending', prompt: 'A wolf portrait with a high-tech blue background.' },
+                { src: 'images/trending-5.webp', category: 'trending', prompt: 'A stone angel statue with soft, dramatic lighting.' },
+                { src: 'images/trending-6.webp', category: 'trending', prompt: 'A surreal landscape with a cosmic electric guitar and a giant ethereal head.' },
+                // Photorealistic
+                { src: 'images/Photorealistic-1.png', category: 'photorealistic', prompt: 'Close-up portrait of an old fisherman with detailed wrinkles.' },
+                { src: 'images/Photorealistic-2.png', category: 'photorealistic', prompt: 'Detailed headshot of a golden eagle with mountains behind it.' },
+                { src: 'images/Photorealistic-3.png', category: 'photorealistic', prompt: 'A vintage typewriter on a wooden desk with papers.' },
+                { src: 'images/Photorealistic-4.png', category: 'photorealistic', prompt: 'Sunlight streaming through a misty, dense forest.' },
+                { src: 'images/Photorealistic-5.webp', category: 'photorealistic', prompt: 'The Taj Mahal seen through an arched doorway at sunrise.' },
+                { src: 'images/Photorealistic-6.webp', category: 'photorealistic', prompt: 'A woman with a blindfold, wearing a crown of flowers and birds.' },
+                // Anime
+                { src: 'images/Anime-1.png', category: 'anime', prompt: 'An anime couple walking under an umbrella on a rainy street.' },
+                { src: 'images/Anime-2.jpg', category: 'anime', prompt: 'An anime girl in a field of glowing flowers, Ghibli-inspired.' },
+                { src: 'images/Anime-3.png', category: 'anime', prompt: 'An anime swordsman fighting a giant lava monster.' },
+                { src: 'images/Anime-4.png', category: 'anime', prompt: 'A cyberpunk anime girl with pink hair and headphones.' },
+                { src: 'images/Anime-5.jpg', category: 'anime', prompt: 'An anime vampire prince sitting on a gothic throne.' },
+                { src: 'images/Anime-6.jpg', category: 'anime', prompt: 'An anime boy with his Shiba Inu dog on a hill at sunset.' },
+                // Abstract
+                { src: 'images/abstract-1.jpg', category: 'abstract', prompt: 'A complex geometric sculpture made of reflective glass.' },
+                { src: 'images/abstract-2.jpg', category: 'abstract', prompt: 'A female android with glowing eyes surrounded by holographic books.' },
+                { src: 'images/abstract-3.png', category: 'abstract', prompt: 'An abstract sculpture of interlocking marble and gold shapes.' },
+                { src: 'images/abstract-4.png', category: 'abstract', prompt: 'A vibrant, geometric kaleidoscope of blue and pink crystals.' },
+                { src: 'images/abstract-5.jpg', category: 'abstract', prompt: 'An explosion of blue geometric shapes from a fiery cloud.' },
+                { src: 'images/abstract-6.jpg', category: 'abstract', prompt: 'An intricate cosmic fractal web with a glowing center.' },
+                // Fantasy (I have added some examples here)
+                { src: 'images/Fantasy-1.webp', category: 'fantasy', prompt: 'A majestic castle on a floating island in the sky during a golden sunset.' },
+                { src: 'images/Fantasy-2.webp', category: 'fantasy', prompt: 'A majestic castle on a floating island in the sky during a golden sunset.' },
+                 { src: 'images/Fantasy-3.webp', category: 'fantasy', prompt: 'A majestic castle on a floating island in the sky during a golden sunset.' },
+                  { src: 'images/Fantasy-4.webp', category: 'fantasy', prompt: 'A majestic castle on a floating island in the sky during a golden sunset.' },
+                   { src: 'images/Fantasy-5.webp', category: 'fantasy', prompt: 'A majestic castle on a floating island in the sky during a golden sunset.' },
+                    { src: 'images/Fantasy-6.webp', category: 'fantasy', prompt: 'A majestic castle on a floating island in the sky during a golden sunset.' },
+            ];
+
+            function displayImages(filter) {
+                galleryGrid.innerHTML = '';
+                const filteredImages = (filter === 'all') ? images : images.filter(img => img.category === filter);
+                
+                filteredImages.forEach(image => {
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item rounded-lg';
+                    item.innerHTML = `
+                        <img src="${image.src}" alt="${image.prompt}" class="w-full h-full object-cover aspect-[3/4] rounded-lg">
+                        <div class="overlay absolute inset-0 bg-black/70 p-3 flex flex-col justify-end rounded-lg">
+                            <p class="text-white text-sm font-medium overflow-hidden text-ellipsis line-clamp-3 mb-2">${image.prompt}</p>
+                            <button class="copy-prompt-btn text-xs bg-white/20 text-white px-3 py-1 rounded-md hover:bg-white/40 self-start" data-prompt="${image.prompt}">Copy Prompt</button>
+                        </div>
+                    `;
+                    galleryGrid.appendChild(item);
+                });
+            }
+
+            filterButtons.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON') {
+                    document.querySelector('.filter-btn.active').classList.remove('active');
+                    e.target.classList.add('active');
+                    displayImages(e.target.dataset.filter);
+                }
+            });
+            
+            galleryGrid.addEventListener('click', (e) => {
+                if (e.target.classList.contains('copy-prompt-btn')) {
+                    const prompt = e.target.dataset.prompt;
+                    navigator.clipboard.writeText(prompt).then(() => {
+                        e.target.textContent = 'Copied!';
+                        setTimeout(() => { e.target.textContent = 'Copy Prompt'; }, 2000);
+                    });
+                }
+            });
+
+            // Initial display
+            displayImages('all');
+        });
+    </script>
+</body>
+</html>

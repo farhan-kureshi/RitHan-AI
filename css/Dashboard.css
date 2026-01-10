@@ -1,0 +1,952 @@
+/* --- THEME & BASIC STYLES --- */
+:root {
+    --bg-dark: #0B0C10;
+    --bg-sidebar: #1F2833;
+    --bg-card: #1A202C;
+    --text-primary: #FFFFFF;
+    --text-secondary: #C5C6C7;
+    --accent-primary: #66FCF1;
+    --accent-secondary: #45A29E;
+    --border-color: #2d3748;
+}
+
+/* --- IMPROVED LIGHT THEME --- */
+
+html.light-mode {
+    /* 1. Background ko thoda darker grey karein */
+    --bg-dark: #e9edf1; /* Pehle #f5f7fa tha */
+    
+    /* Sidebar/Card ko white hi rakhein */
+    --bg-sidebar: #ffffff;
+    --bg-card: #ffffff; /* Card ko bhi white kar dein */
+
+    /* 2. Borders ko thoda darker karein */
+    --border-color: #d1d9e6; /* Pehle #e2e8f0 tha */
+
+    /* Text colors ko same rakhein ya thoda adjust karein agar zaroorat ho */
+    --text-primary: #1a202c; 
+    --text-secondary: #4a5568; 
+
+    /* Accent colors ko same rakhein */
+    --accent-primary: #3182ce;
+    --accent-secondary: #2b6cb0;
+}
+
+/* 3. Subtle Shadows add karein */
+html.light-mode #sidebar {
+    box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.05); /* Sidebar par halki shadow */
+}
+
+html.light-mode header {
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05); /* Header par halki shadow */
+    background-color: var(--bg-sidebar); /* Header ko bhi white background dein */
+}
+
+html.light-mode .prompt-container {
+     background: var(--bg-card); /* Prompt bar background white */
+     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.08); /* Prompt bar par shadow */
+     border: 1px solid var(--border-color); /* Halka border */
+     padding: 1px; /* Adjust padding slightly */
+}
+
+html.light-mode .prompt-container::before {
+    /* Light mode mein rotating border halka karein */
+    background: conic-gradient(transparent, rgba(49, 130, 206, 0.4), transparent 30%);
+}
+
+html.light-mode .prompt-inner {
+    background: var(--bg-card); /* Inner prompt background white */
+}
+
+/* Card backgrounds ko white karein (jaise subscription page) */
+html.light-mode #page-subscription > div,
+html.light-mode #page-contact > div,
+html.light-mode #page-prompt-assistant > div {
+    background-color: var(--bg-card); /* White */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.06); /* Shadow */
+    border: 1px solid var(--border-color); /* Border */
+}
+
+/* Gallery items par bhi shadow/border */
+html.light-mode .gallery-item {
+     border: 1px solid var(--border-color);
+     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
+}
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-secondary);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.headline {
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+/* --- DEFAULTS & UTILITIES --- */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #4a4a4a;
+    border-radius: 3px;
+}
+
+/* --- PAGE & LAYOUT STRUCTURE --- */
+.page-view {
+    display: none;
+}
+
+.page-view:not(.hidden) {
+    display: block;
+}
+
+#page-text-to-image:not(.hidden) {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+#page-text-to-image:not(.hidden) #main-content-area {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+}
+
+#page-text-to-image:not(.hidden) #prompt-area-wrapper {
+    flex-shrink: 0;
+}
+
+/* --- LIGHT THEME LOGO & SIDEBAR DIM FIX --- */
+
+html.light-mode .littlnavbar {
+    /* Header/Logo background remains white */
+    background-color: var(--bg-sidebar); 
+}
+
+/* 1. Make Logo Text Visible */
+html.light-mode .littlnavbar h1 {
+    /* Use the primary text color for light mode */
+    color: var(--text-primary); 
+}
+
+/* --- LIGHT THEME LOGO & SIDEBAR DIM FIX (Alternative Background) --- */
+/* ... (logo styles) ... */
+
+html.light-mode #sidebar {
+    background-color: #e9edf1; /* <-- BADAL KAR YEH COLOR USE KAREIN */
+    --bg-sidebar: #e9edf1; /* Isse bhi match karein */
+}
+/* ... (hover styles) ... */
+
+/* Optional: Agar sidebar background darker hai, toh logo/header area ka background white rakhein for contrast */
+html.light-mode .littlnavbar {
+     background-color: #ffffff; /* White background for logo area */
+     border-bottom: 1px solid var(--border-color); /* Ensure border is visible */
+}
+html.light-mode .littlnavbar h1 {
+     color: var(--text-primary); /* Dark text */
+}
+
+/* Optional: Make sidebar links slightly less bright on hover */
+html.light-mode .sidebar-link:hover,
+html.light-mode .sidebar-link.active {
+    /* Use a slightly darker blue hover */
+    background-color: rgba(49, 130, 206, 0.08); 
+}
+/* --- SIDEBAR & NAVIGATION --- */
+.sidebar-link {
+    transition: all 0.2s ease-in-out;
+    border-left: 3px solid transparent;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+    background-color: rgba(102, 252, 241, 0.1);
+    border-left-color: var(--accent-primary);
+    color: var(--text-primary);
+}
+
+html.light-mode .sidebar-link:hover,
+html.light-mode .sidebar-link.active {
+    background-color: rgba(49, 130, 206, 0.1);
+}
+/* --- LIGHT THEME FIX for History Page --- */
+
+html.light-mode #page-history h1 {
+    /* Make heading visible */
+    color: var(--text-primary); 
+}
+
+html.light-mode #history-container > div {
+    /* Use light card background for each history item */
+    background-color: var(--bg-card); 
+    border: 1px solid var(--border-color);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05); /* Optional: Add subtle shadow */
+}
+
+html.light-mode #history-container p {
+    /* Make the prompt text visible */
+    color: var(--text-primary); 
+}
+
+html.light-mode #history-container .reuse-prompt-btn {
+    /* Style the button for light theme */
+    background-color: var(--accent-primary); /* Blue background */
+    color: white; /* White text */
+}
+
+html.light-mode #history-container .reuse-prompt-btn:hover {
+    background-color: var(--accent-secondary); /* Darker blue on hover */
+}
+
+/* Fix for empty state text */
+html.light-mode #history-empty p {
+     color: var(--text-secondary);
+}
+
+/* --- LIGHT THEME FIX for My Images & Liked Images --- */
+
+/* Make page headings visible */
+html.light-mode #page-my-images h1,
+html.light-mode #page-liked-images h1 {
+    color: var(--text-primary); 
+}
+
+/* Style the empty state text */
+html.light-mode #my-images-empty p,
+html.light-mode #liked-images-empty p {
+    color: var(--text-secondary); /* Use secondary text color */
+}
+
+/* Style the empty state button */
+html.light-mode #my-images-empty button,
+html.light-mode #liked-images-empty button {
+    background-color: var(--accent-primary); /* Blue background */
+    color: white; /* White text */
+}
+
+html.light-mode #my-images-empty button:hover,
+html.light-mode #liked-images-empty button:hover {
+    background-color: var(--accent-secondary); /* Darker blue on hover */
+}
+
+/* Ensure gallery items have correct background/border (already added previously, but good to confirm) */
+html.light-mode .gallery-item {
+     border: 1px solid var(--border-color);
+     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
+     background-color: var(--bg-card); /* Ensure background is white */
+}
+/* --- LIGHT THEME FIX for Prompt Assistant, Subscription, Contact Us --- */
+
+/* Make page headings visible */
+html.light-mode #page-prompt-assistant h1,
+html.light-mode #page-subscription h1,
+html.light-mode #page-contact h1 {
+    color: var(--text-primary); 
+}
+
+/* Ensure main container/card has light theme background, border, shadow */
+/* Note: This was partially added before, this ensures it applies to all */
+html.light-mode #page-prompt-assistant > div, 
+html.light-mode #page-subscription > div, /* Targets the inner divs directly */
+html.light-mode #page-contact > div {
+    background-color: var(--bg-card); /* White */
+    border: 1px solid var(--border-color);
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+/* Fix text colors inside these pages */
+html.light-mode #page-prompt-assistant h2,
+html.light-mode #page-subscription h2,
+html.light-mode #page-contact h2,
+html.light-mode #page-prompt-assistant h3,
+html.light-mode #page-subscription h3,
+html.light-mode #page-contact h3,
+html.light-mode #page-prompt-assistant label,
+html.light-mode #page-subscription label,
+html.light-mode #page-contact label {
+    color: var(--text-primary); /* Dark text for headings/labels */
+}
+
+html.light-mode #page-prompt-assistant p,
+html.light-mode #page-subscription p,
+html.light-mode #page-contact p,
+html.light-mode #page-contact span { /* For the 'OR' divider */
+    color: var(--text-secondary); /* Grey text for paragraphs */
+}
+
+/* Fix Subscription specific text */
+html.light-mode #subscription-free h2 {
+    color: #b7791f; /* Adjust yellow for light theme if needed */
+}
+html.light-mode #subscription-free strong,
+html.light-mode #subscription-pro h2 {
+    color: var(--text-primary); /* Dark text */
+}
+
+/* Fix Form Elements (Inputs, Textarea, Select) */
+html.light-mode #page-prompt-assistant textarea,
+html.light-mode #page-prompt-assistant select,
+html.light-mode #page-contact input[type="text"],
+html.light-mode #page-contact input[type="email"],
+html.light-mode #page-contact textarea {
+    background-color: #f0f4f8; /* Very light grey background */
+    color: var(--text-primary); /* Dark text */
+    border: 1px solid var(--border-color);
+}
+html.light-mode #page-prompt-assistant textarea::placeholder,
+html.light-mode #page-prompt-assistant select::placeholder,
+html.light-mode #page-contact input::placeholder,
+html.light-mode #page-contact textarea::placeholder {
+    color: #a0aec0; /* Lighter placeholder text */
+}
+
+/* Fix Buttons */
+html.light-mode #page-prompt-assistant button#generate-prompts,
+html.light-mode #page-contact button[type="submit"],
+html.light-mode #page-subscription a { /* Style links like buttons */
+    background-color: var(--accent-primary); /* Blue background */
+    color: white; /* White text */
+}
+
+html.light-mode #page-prompt-assistant button#generate-prompts:hover,
+html.light-mode #page-contact button[type="submit"]:hover,
+html.light-mode #page-subscription a:hover {
+    background-color: var(--accent-secondary); /* Darker blue on hover */
+}
+
+/* Fix AI Prompt results in Prompt Assistant */
+html.light-mode #ai-prompts-list > div {
+     background-color: #f0f4f8; /* Light grey background */
+     border: 1px solid var(--border-color);
+}
+html.light-mode #ai-prompts-list p {
+    color: var(--text-primary); /* Dark text */
+}
+html.light-mode #ai-prompts-list button {
+    background-color: var(--accent-primary); /* Blue */
+    color: white; 
+}
+html.light-mode #ai-prompts-list button:hover {
+    background-color: var(--accent-secondary); /* Darker blue */
+}
+
+/* Fix Contact Us social icons */
+html.light-mode #page-contact a svg {
+    color: var(--text-secondary); /* Grey icons */
+}
+html.light-mode #page-contact a:hover svg {
+    color: var(--accent-primary); /* Blue on hover */
+}
+
+
+
+/* Ensure text inside gallery overlay is readable (it's white, which is fine on dark overlay) */
+/* No change needed for .gallery-item .overlay text in light mode */
+/* --- ACCORDION (HIDE/SHOW) FIX --- */
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+}
+
+/* This class will be added by JS to the header button */
+.accordion-header.active+.accordion-content {
+    max-height: 1000px;
+    /* A large value to ensure content fits */
+}
+
+.accordion-header svg {
+    transition: transform 0.3s ease;
+}
+
+.accordion-header.active svg {
+    transform: rotate(180deg);
+}
+
+[id^="toggle-"] {
+    font-size: 1.25rem;
+    padding: 0 4px;
+    line-height: 1;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* --- SETTINGS PANEL (DESKTOP & MOBILE FIX) --- */
+#settings-panel-overlay {
+    z-index: 55;
+    /* Higher than sidebar */
+}
+
+#settings-panel-container {
+    z-index: 60;
+    /* Higher than overlay */
+}
+
+.setting-option.selected {
+    border-color: var(--accent-primary) !important;
+    background-color: rgba(102, 252, 241, 0.1);
+}
+
+/* MOBILE BOTTOM SHEET STYLES */
+/* MOBILE BOTTOM SHEET STYLES */
+@media (max-width: 768px) {
+    #settings-panel-container {
+        position: fixed;
+        top: auto;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: auto;
+        max-height: 70vh;
+        transform: translateY(100%);
+        transition: transform 0.3s ease-in-out;
+        display: none;
+        /* Start with display: none */
+    }
+
+    #settings-panel-container:not(.hidden) {
+        display: block;
+        /* Show when not hidden */
+    }
+
+    #settings-panel-container.show {
+        transform: translateY(0);
+    }
+
+    #settings-panel-container>div {
+        /* Target the inner panel div */
+        width: 100%;
+        height: 100%;
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+        border-radius: 1.5rem 1.5rem 0 0;
+    }
+
+    #settings-panel-container header {
+        position: relative;
+        padding-top: 20px;
+    }
+
+    #settings-panel-container header::before {
+        content: '';
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 4px;
+        background-color: #4a5568;
+        border-radius: 2px;
+    }
+}
+
+
+/* --- CHAT & PROMPT STYLES --- */
+.prompt-container {
+    border-radius: 9999px;
+    padding: 3px;
+    background: var(--bg-card);
+    position: relative;
+    overflow: hidden;
+}
+
+.prompt-container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(transparent, rgba(102, 252, 241, 0.7), transparent 30%);
+    animation: rotate 4s linear infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.prompt-inner {
+    position: relative;
+    background: var(--bg-sidebar);
+    border-radius: 9999px;
+    padding: 0.25rem 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.user-message,
+.ai-message {
+    display: flex;
+    margin-bottom: 10px;
+    max-width: 85%;
+}
+
+.user-message {
+    justify-content: flex-end;
+    margin-left: auto;
+}
+
+.user-message .message-bubble {
+    background-color: #45A29E;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 20px 20px 5px 20px;
+    word-wrap: break-word;
+}
+
+.ai-message {
+    justify-content: flex-start;
+    margin-right: auto;
+    max-width: 450px !important;
+    width: 100%;
+}
+
+.ai-message .message-bubble {
+    background-color: transparent;
+    padding: 0;
+}
+
+.message-bubble img {
+    width: 100%;
+    border-radius: 15px;
+    display: block;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* --- RESPONSIVE SIDEBAR LOGIC --- */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 45;
+}
+
+@media (min-width: 768px) {
+    #main-content {
+        padding-left: 288px;
+        transition: padding-left 0.3s ease-in-out;
+    }
+
+    body.sidebar-collapsed #main-content {
+        padding-left: 0;
+    }
+
+    #sidebar {
+        transform: translateX(0);
+    }
+
+    body.sidebar-collapsed #sidebar {
+        transform: translateX(-100%);
+    }
+
+   #menu-button { 
+        display: block !important; 
+        margin-right: 16px;
+    }
+}
+/* --- SETTINGS PANEL DESKTOP POSITION FIX --- */
+
+/* Desktop styles - panel opens on right side */
+@media (min-width: 769px) {
+    #settings-panel-container {
+        position: fixed;
+        top: 0;
+        left: 288px; /* Sidebar width */
+        right: 0;
+        height: 100vh;
+        background: transparent;
+        pointer-events: none;
+        z-index: 60;
+    }
+    
+    #settings-panel-container:not(.hidden) {
+        display: block;
+    }
+    
+    #settings-panel-container > div {
+        width: 320px;
+        height: 100%;
+        margin-left: auto;
+        background: var(--bg-sidebar);
+        border-left: 1px solid var(--border-color);
+        pointer-events: all;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    #settings-panel-container:not(.hidden) > div {
+        transform: translateX(0);
+    }
+    
+    /* Shift main content when settings panel is open */
+    #settings-panel-container:not(.hidden) ~ #main-content {
+        margin-right: 320px;
+        transition: margin-right 0.3s ease-in-out;
+    }
+}
+
+/* Desktop styles - panel opens aligned with sidebar */
+@media (min-width: 769px) {
+    #settings-panel-container {
+        position: fixed;
+        top: 0;
+        left: 288px; /* Same as sidebar width */
+        right: auto;
+        height: 100vh;
+        width: 320px;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 60;
+    }
+    
+    #settings-panel-container:not(.hidden) {
+        display: block;
+        transform: translateX(0);
+    }
+    
+    #settings-panel-container > div {
+        width: 100%;
+        height: 100%;
+        border-left: 1px solid var(--border-color);
+        background: var(--bg-sidebar);
+        border-radius: 0;
+    }
+    
+    /* When sidebar is collapsed */
+    body.sidebar-collapsed #settings-panel-container {
+        left: 0;
+    }
+}
+/* --- STICKY SIDEBAR LOGO FIX - PROPER SOLUTION --- */
+
+/* Make sidebar a proper flex container */
+#sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden; /* Prevent entire sidebar from scrolling */
+}
+
+/* Make ONLY the logo sticky - this is the key fix */
+.littlnavbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--bg-sidebar);
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+    height: 80px; /* Match your h-20 class */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Make the entire navigation content scrollable */
+#sidebar > nav {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ensure all sections flow normally inside scrollable area */
+#sidebar > nav > * {
+    flex-shrink: 0; /* Prevent sections from shrinking */
+}
+
+/* Custom scrollbar for the nav content */
+#sidebar > nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+#sidebar > nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#sidebar > nav::-webkit-scrollbar-thumb {
+    background: #4a4a4a;
+    border-radius: 2px;
+}
+
+/* Mobile responsive - on mobile, let everything scroll normally */
+@media (max-width: 768px) {
+    #sidebar {
+        height: auto;
+        overflow-y: auto;
+    }
+    
+    .littlnavbar {
+        position: relative; /* On mobile, no sticky */
+    }
+    
+    #sidebar > nav {
+        overflow-y: visible;
+    }
+}
+/* === IMAGE ACTION BUTTONS STYLES === */
+.image-actions-container {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Buttons ke beech mein gap */
+    padding: 8px;
+    background-color: rgba(0, 0, 0, 0.3); /* halka sa dark background */
+    border-radius: 0 0 15px 15px; /* Image ke bottom corners se match karega */
+    margin-top: -5px; /* Image se thoda sa overlap */
+    position: relative;
+}
+
+.action-btn {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    border-radius: 50%; /* Gol buttons */
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.action-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.action-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* === IMAGE GRID STYLES === */
+.message-bubble.ai-image-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Ek row mein 2 images */
+    gap: 8px;
+    background-color: transparent; /* Grid ke liye background color hata dein */
+    padding: 0;
+    max-width: 512px;
+}
+
+.grid-image-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    cursor: pointer;
+    aspect-ratio: 1 / 1; /* Images ko square banaye rakhega */
+}
+
+.grid-image-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.grid-image-item:hover img {
+    transform: scale(1.05);
+}
+
+.grid-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.grid-image-item:hover .grid-image-overlay {
+    opacity: 1;
+}
+
+.grid-image-overlay .action-btn {
+    width: 32px;
+    height: 32px;
+}
+
+.grid-image-overlay .action-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* === UNLIMITED CREDITS ANIMATION === */
+.animated-unlimited {
+    font-weight: 700;
+    background: linear-gradient(90deg,
+            var(--accent-primary),
+            #fff,
+            var(--accent-secondary),
+            var(--accent-primary));
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+/* === PRO/FREE BADGE AUR AVATAR BORDER STYLES === */
+
+.status-badge {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    font-size: 0.6rem;
+    padding: 2px 6px;
+    border-radius: 99px;
+    font-weight: bold;
+    z-index: 10;
+}
+
+.pro-badge {
+    background-color: var(--accent-primary);
+    color: var(--bg-dark);
+    border: 1px solid var(--accent-primary);
+}
+
+.free-badge {
+    background-color: #6b7280;
+    color: white;
+    border: 1px solid #6b7280;
+}
+
+/* Avatar border (PRO user) */
+.pro-avatar-border {
+    position: relative;
+    border: 2px solid var(--accent-primary);
+    border-radius: 50%;
+    padding: 2px;
+}
+
+/* Avatar border (FREE user) */
+.free-avatar-border {
+    position: relative;
+    border: 2px solid #6b7280;
+    border-radius: 50%;
+    padding: 2px;
+}
+
+/* Purani rotating border ko hatane ke liye (agar ho toh) */
+.pro-avatar-border::before {
+    display: none;
+} 
+/* --- ANIMATIONS (Loader & Typing) --- */
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid var(--bg-sidebar);
+    border-bottom-color: var(--accent-primary);
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.typing-dots {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.typing-dots span {
+    height: 10px;
+    width: 10px;
+    margin: 0 3px;
+    background-color: var(--text-secondary);
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.typing-dots span:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.typing-dots span:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+    0%, 80%, 100% {
+        transform: scale(0);
+    }
+    40% {
+        transform: scale(1.0);
+    }
+}
+/* --- GALLERY STYLES --- */
+.gallery-item .overlay {
+    /* opacity: 0; */ /* Yeh extra.html mein inline hai */
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* .gallery-item:hover .overlay { */
+    /* opacity: 1; */ /* Yeh extra.html mein inline hai */
+/* } */
+
+.gallery-item img {
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+/* Text ko 3 line mein fix karne ke liye */
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+/* --- PROMPT SUGGESTION STYLES --- */
+.prompt-suggestion {
+    transition: all 0.2s ease;
+    /* cursor: pointer; */ /* Yeh extra.html mein inline hai */
+}
+
+.prompt-suggestion:hover {
+    background-color: rgba(102, 252, 241, 0.1);
+    transform: translateX(5px);
+}
+
+html.light-mode .prompt-suggestion:hover {
+    background-color: rgba(49, 130, 206, 0.1);
+}

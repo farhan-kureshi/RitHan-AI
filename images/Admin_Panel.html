@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en" class="dark-mode">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - PicVibe AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-dark: #0B0C10; --bg-sidebar: #1F2833; --bg-card: #1A202C; --text-primary: #FFFFFF;
+            --text-secondary: #C5C6C7; --accent-primary: #66FCF1; --accent-secondary: #45A29E;
+            --border-color: #2d3748; --danger: #ef4444; --success: #22c55e;
+        }
+        html.light-mode {
+            --bg-dark: #f5f7fa; --bg-sidebar: #ffffff; --bg-card: #fdfdfd; --text-primary: #1a1a1a;
+            --text-secondary: #4a5568; --accent-primary: #3182ce; --accent-secondary: #2b6cb0;
+            --border-color: #e2e8f0;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: var(--text-secondary); }
+        .sidebar-link { transition: all 0.2s ease-in-out; border-left: 3px solid transparent; }
+        .sidebar-link:hover, .sidebar-link.active {
+            background-color: rgba(102, 252, 241, 0.1); border-left-color: var(--accent-primary);
+            color: var(--text-primary);
+        }
+        html.light-mode .sidebar-link:hover, html.light-mode .sidebar-link.active {
+            background-color: rgba(49, 130, 206, 0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #4a4a4a; border-radius: 3px; }
+        .modal-overlay { background-color: rgba(0,0,0,0.7); backdrop-filter: blur(4px); }
+        .stat-card:hover { transform: translateY(-5px); border-color: var(--accent-primary); }
+    </style>
+</head>
+
+<body class="antialiased">
+    <div class="flex h-screen overflow-hidden bg-[var(--bg-dark)]">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-[var(--bg-sidebar)] border-r border-[var(--border-color)] flex-shrink-0 flex flex-col">
+            <div class="flex items-center justify-center h-20 border-b border-[var(--border-color)] flex-shrink-0">
+                <h1 class="text-2xl font-bold text-white ml-2">ADMIN PANEL</h1>
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="#" class="sidebar-link active flex items-center p-3 rounded-lg" data-page="dashboard">
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="sidebar-link flex items-center p-3 rounded-lg" data-page="users">
+                    <span>User Management</span>
+                </a>
+                <a href="#" class="sidebar-link flex items-center p-3 rounded-lg" data-page="images">
+                    <span>Image Moderation</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+             <header class="flex-shrink-0 bg-[var(--bg-dark)] p-4 flex justify-end items-center border-b border-[var(--border-color)]">
+                <a href="/logout" id="logout-btn" class="text-sm font-semibold text-[var(--accent-primary)] hover:text-white">Logout</a>
+             </header>
+
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-[var(--bg-dark)] p-8 custom-scrollbar">
+                
+                <!-- Dashboard Page -->
+                <div id="page-dashboard" class="page-content">
+                    <h1 class="text-3xl font-bold text-[var(--text-primary)] mb-6">Dashboard Overview</h1>
+                    <!-- Stat Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="stat-card bg-[var(--bg-card)] p-6 rounded-lg border-2 border-[var(--border-color)] transition-all duration-300">
+                            <h3 class="text-sm font-medium text-[var(--text-secondary)]">Total Users</h3>
+                            <p id="stats-total-users" class="text-3xl font-bold text-[var(--text-primary)] mt-2">...</p>
+                        </div>
+                        <div class="stat-card bg-[var(--bg-card)] p-6 rounded-lg border-2 border-[var(--border-color)] transition-all duration-300">
+                            <h3 class="text-sm font-medium text-[var(--text-secondary)]">Pro Users</h3>
+                            <p id="stats-pro-users" class="text-3xl font-bold text-[var(--success)] mt-2">...</p>
+                        </div>
+                        <div class="stat-card bg-[var(--bg-card)] p-6 rounded-lg border-2 border-[var(--border-color)] transition-all duration-300">
+                            <h3 class="text-sm font-medium text-[var(--text-secondary)]">Images Generated</h3>
+                            <p id="stats-images-generated" class="text-3xl font-bold text-[var(--text-primary)] mt-2">...</p>
+                        </div>
+                        <div class="stat-card bg-[var(--bg-card)] p-6 rounded-lg border-2 border-[var(--border-color)] transition-all duration-300">
+                            <h3 class="text-sm font-medium text-[var(--text-secondary)]">Total Revenue</h3>
+                            <p id="stats-total-revenue" class="text-3xl font-bold text-[var(--accent-primary)] mt-2">₹...</p>
+                        </div>
+                    </div>
+                    <!-- Charts & Activity -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2 bg-[var(--bg-card)] p-6 rounded-lg border border-[var(--border-color)]">
+                             <h3 class="font-semibold text-[var(--text-primary)] mb-4">User Signup Trend (Last 30 Days)</h3>
+                            <canvas id="signup-chart"></canvas>
+                        </div>
+                        <div class="bg-[var(--bg-card)] p-6 rounded-lg border border-[var(--border-color)]">
+                            <h3 class="font-semibold text-[var(--text-primary)] mb-4">Recent Activity</h3>
+                            <div id="recent-activity-list" class="space-y-4"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Management Page -->
+                <div id="page-users" class="page-content hidden">
+                    <h1 class="text-3xl font-bold text-[var(--text-primary)] mb-6">User Management</h1>
+                    <div class="bg-[var(--bg-card)] rounded-lg border border-[var(--border-color)]">
+                        <div class="p-4">
+                            <input type="text" id="user-search-input" placeholder="Search by name or email..." class="w-full bg-[var(--bg-dark)] border border-[var(--border-color)] rounded-lg p-2 text-white">
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left text-[var(--text-secondary)]">
+                                <thead class="text-xs uppercase bg-[var(--bg-sidebar)]">
+                                    <tr>
+                                        <th class="p-4">User</th><th class="p-4">Status</th><th class="p-4">Credits</th>
+                                        <th class="p-4">Last Login</th><th class="p-4 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-table-body">
+                                    <!-- User rows will be injected here by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Moderation Page -->
+                <div id="page-images" class="page-content hidden">
+                    <h1 class="text-3xl font-bold text-[var(--text-primary)] mb-6">Image Moderation</h1>
+                    <div id="images-gallery" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                        <!-- Image cards will be injected here -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Modal for User Actions -->
+    <div id="user-action-modal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="bg-[var(--bg-card)] rounded-lg shadow-xl p-6 w-full max-w-md border border-[var(--border-color)]">
+            <h2 id="modal-title" class="text-xl font-bold text-[var(--text-primary)] mb-4">Manage User</h2>
+            <div id="modal-content"></div>
+            <div class="mt-6 flex justify-end space-x-3">
+                <button id="modal-cancel-btn" class="px-4 py-2 bg-[var(--bg-sidebar)] rounded-lg">Cancel</button>
+                <button id="modal-confirm-btn" class="px-4 py-2 bg-[var(--accent-primary)] text-black font-bold rounded-lg">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- State & Elements ---
+    let signupChartInstance = null;
+    const pages = document.querySelectorAll('.page-content');
+    const navLinks = document.querySelectorAll('.sidebar-link');
+    const usersTableBody = document.getElementById('users-table-body');
+    const userSearchInput = document.getElementById('user-search-input');
+    const imagesGallery = document.getElementById('images-gallery');
+    
+    // ✅ NAYA CHANGE: Active page ko track karne ke liye variable
+    let activePageId = 'dashboard';
+
+    // --- Navigation ---
+    function navigateTo(pageId) {
+        // ✅ NAYA CHANGE: Agar pehle se usi page par hain, to kuch na karein
+        if (activePageId === pageId) {
+            return; 
+        }
+        activePageId = pageId;
+
+        pages.forEach(p => p.classList.add('hidden'));
+        document.getElementById(`page-${pageId}`).classList.remove('hidden');
+        navLinks.forEach(l => l.classList.remove('active'));
+        document.querySelector(`.sidebar-link[data-page="${pageId}"]`).classList.add('active');
+         
+        // Load data for the activated page
+        if (pageId === 'dashboard') loadDashboard();
+        if (pageId === 'users') loadUsers();
+        if (pageId === 'images') loadImages();
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            navigateTo(link.dataset.page);
+        });
+    });
+
+   // --- Data Loading & Rendering ---
+    async function loadDashboard() {
+        try {
+            const response = await fetch('/api/admin/stats');
+            if (response.status === 403) {
+                alert("Access Denied. Please log in as an admin.");
+                window.location.href = '/login_patched.html';
+                return;
+            }
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.json();
+
+            // Update stat cards
+            document.getElementById('stats-total-users').textContent = data.stats.totalUsers;
+            document.getElementById('stats-pro-users').textContent = data.stats.proUsers;
+            document.getElementById('stats-images-generated').textContent = data.stats.imagesGenerated;
+            document.getElementById('stats-total-revenue').textContent = `₹${data.stats.totalRevenue}`;
+
+            // Update recent activity
+            const activityList = document.getElementById('recent-activity-list');
+            activityList.innerHTML = data.recentActivity.map(act => `
+                <div class="flex items-start">
+                    <div class="ml-3 flex-1">
+                        <p class="text-sm font-medium text-[var(--text-primary)]">${act.fullname} <span class="font-normal text-[var(--text-secondary)]">${act.action}</span></p>
+                        <p class="text-xs text-gray-500">${new Date(act.timestamp).toLocaleString()}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Render chart
+            renderSignupChart(data.charts.signupTrend);
+        } catch (error) {
+            console.error("Failed to load dashboard stats:", error);
+        }
+    }
+    async function loadUsers(searchTerm = '') {
+        const response = await fetch(`/api/admin/users?search=${encodeURIComponent(searchTerm)}`);
+        if (!response.ok) return;
+        const users = await response.json();
+        
+        usersTableBody.innerHTML = users.map(user => `
+            <tr class="border-b border-[var(--border-color)]">
+                <td class="p-4">
+                    <div class="font-medium text-[var(--text-primary)]">${user.fullname}</div>
+                    <div class="text-xs">${user.email}</div>
+                </td>
+                <td class="p-4">
+                    <span class="px-2 py-1 text-xs font-semibold rounded-full ${user.is_pro ? 'bg-[var(--success)]/20 text-[var(--success)]' : 'bg-gray-700 text-gray-300'}">
+                        ${user.is_pro ? 'PRO' : 'FREE'}
+                    </span>
+                </td>
+                <td class="p-4">${user.credits}</td>
+                <td class="p-4">${user.last_login_at ? new Date(user.last_login_at).toLocaleDateString() : 'Never'}</td>
+                <td class="p-4 text-right space-x-2">
+                     <button class="user-action-btn text-xs bg-[var(--accent-secondary)] px-2 py-1 rounded" data-action="add_credits" data-userid="${user.id}">+ Credits</button>
+                     <button class="user-action-btn text-xs bg-[var(--accent-secondary)] px-2 py-1 rounded" data-action="toggle_pro" data-userid="${user.id}" data-ispro="${user.is_pro}">
+                        ${user.is_pro ? 'Make Free' : 'Make Pro'}
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+    
+    async function loadImages() {
+        const response = await fetch('/api/admin/images');
+        if (!response.ok) return;
+        const images = await response.json();
+
+      
+        imagesGallery.innerHTML = images.map(img => `
+            <div class="relative group bg-[var(--bg-card)] rounded-lg overflow-hidden">
+                <img src="${img.image_url}" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/400x400/1A202C/C5C6C7?text=Error';">
+                <div class="absolute inset-0 bg-black/70 p-2 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between">
+                    <p class="text-white text-xs line-clamp-3">${img.prompt}</p>
+                    <div>
+                        <p class="text-xs text-gray-300">${img.fullname}</p>
+                        <button class="delete-image-btn w-full mt-1 text-xs bg-[var(--danger)] text-white font-bold py-1 rounded" data-imageid="${img.id}">Delete</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // --- Chart Rendering ---
+    function renderSignupChart(trendData) {
+        const ctx = document.getElementById('signup-chart').getContext('2d');
+        const labels = [];
+        const data = [];
+        const today = new Date();
+
+        for (let i = 29; i >= 0; i--) {
+            const date = new Date(today);
+            date.setDate(today.getDate() - i);
+            const dateString = date.toISOString().split('T')[0];
+            labels.push(dateString);
+            data.push(trendData[dateString] || 0);
+        }
+
+        if(signupChartInstance) signupChartInstance.destroy();
+
+        signupChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: { labels, datasets: [{
+                label: 'New Users', data,
+                backgroundColor: 'rgba(102, 252, 241, 0.2)',
+                borderColor: 'rgba(102, 252, 241, 1)',
+                borderWidth: 2, tension: 0.4, fill: true
+            }] },
+            options: {
+                // ✅ NAYA CHANGE: Animation ko tez aur controlled banaya gaya hai
+                animation: {
+                    duration: 1000 // Animation 1 second mein poora hoga
+                },
+                responsive: true, maintainAspectRatio: false,
+                scales: { 
+                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' } },
+                    x: { grid: { display: false } } 
+                }
+            }
+        });
+    }
+
+    // --- User Actions & Modal ---
+    const modal = document.getElementById('user-action-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalContent = document.getElementById('modal-content');
+    const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+    const modalCancelBtn = document.getElementById('modal-cancel-btn');
+    let currentAction = null;
+
+    function openModal(action, userId, isPro) {
+        currentAction = { action, userId };
+        modal.classList.remove('hidden');
+
+        if (action === 'add_credits') {
+            modalTitle.textContent = 'Add Credits';
+            modalContent.innerHTML = `<label class="block mb-2">Amount to add:</label><input id="credits-amount-input" type="number" value="100" class="w-full bg-[var(--bg-dark)] border border-[var(--border-color)] rounded-lg p-2 text-white">`;
+        } else if (action === 'toggle_pro') {
+            const newStatus = isPro === 'true' ? 'Free' : 'Pro';
+            modalTitle.textContent = `Change Status to ${newStatus}`;
+            modalContent.innerHTML = `<p>Are you sure you want to make this user a ${newStatus.toLowerCase()} member?</p>`;
+            currentAction.status = !(isPro === 'true');
+        }
+    }
+    
+    modalConfirmBtn.addEventListener('click', async () => {
+        if (!currentAction) return;
+
+        let body = { action: currentAction.action };
+        if (currentAction.action === 'add_credits') {
+            body.amount = document.getElementById('credits-amount-input').value;
+        } else if (currentAction.action === 'toggle_pro') {
+            body.status = currentAction.status;
+        }
+
+        await fetch(`/api/admin/users/${currentAction.userId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        
+        modal.classList.add('hidden');
+        loadUsers(userSearchInput.value); // Refresh user list
+    });
+
+    modalCancelBtn.addEventListener('click', () => modal.classList.add('hidden'));
+
+    // --- Event Listeners ---
+    userSearchInput.addEventListener('input', (e) => loadUsers(e.target.value));
+
+    document.body.addEventListener('click', e => {
+        if (e.target.classList.contains('user-action-btn')) {
+            const { action, userid, ispro } = e.target.dataset;
+            openModal(action, userid, ispro);
+        }
+        if (e.target.classList.contains('delete-image-btn')) {
+            if (confirm('Are you sure you want to delete this image?')) {
+                const imageId = e.target.dataset.imageid;
+                fetch(`/api/admin/images/${imageId}`, { method: 'DELETE' })
+                    .then(() => loadImages());
+            }
+        }
+    });
+    
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        await fetch('/logout', { method: 'POST' });
+        window.location.href = '/login_patched.html';
+    });
+    
+    // --- Initial Load ---
+    navigateTo('dashboard');
+});
+</script>
+</body>
+
+</html>

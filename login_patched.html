@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - RitHan AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="images/logo-1.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <style>
+        /* --- Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            /* Prevents scrollbars from animation */
+            /* CHANGE 1: Added flex properties to center content */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .headline {
+            font-family: 'Space Grotesk', Inter, sans-serif;
+        }
+
+        /* --- Animated Background --- */
+        #animation-section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2px;
+            flex-wrap: wrap;
+            overflow: hidden;
+        }
+
+        #animation-section::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(#0B0C10, #66FCF1, #0B0C10);
+            animation: animate 5s linear infinite;
+        }
+
+        @keyframes animate {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        #animation-section span {
+            position: relative;
+            display: block;
+            width: calc(6.25vw - 2px);
+            height: calc(6.25vw - 2px);
+            background: #181818;
+            z-index: 2;
+            transition: 1.5s;
+        }
+
+        #animation-section span:hover {
+            background: #66FCF1;
+            transition: 0s;
+        }
+
+        /* --- Login Box --- */
+        .signin {
+            /* CHANGE 2: Changed position to relative to allow flex centering */
+            position: relative;
+            width: 90%;
+            max-width: 450px;
+            background: #222;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+
+        .signin .content {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .signin .content h2 {
+            font-size: 2em;
+            color: #66FCF1;
+            text-transform: uppercase;
+        }
+
+        .signin .content .form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .signin .content .form .inputBox {
+            position: relative;
+            width: 100%;
+        }
+
+        .signin .content .form .inputBox input {
+            position: relative;
+            width: 100%;
+            background: #333;
+            border: none;
+            outline: none;
+            padding: 25px 10px 7.5px;
+            border-radius: 4px;
+            color: #fff;
+            font-weight: 500;
+            font-size: 1em;
+        }
+
+        .signin .content .form .inputBox i {
+            position: absolute;
+            left: 0;
+            padding: 15px 10px;
+            font-style: normal;
+            color: #aaa;
+            transition: 0.5s;
+            pointer-events: none;
+        }
+
+        .signin .content .form .inputBox input:focus~i,
+        .signin .content .form .inputBox input:valid~i {
+            transform: translateY(-7.5px);
+            font-size: 0.8em;
+            color: #fff;
+        }
+
+        .signin .content .form .links {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .signin .content .form .links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .signin .content .form .links a:hover {
+            color: #66FCF1;
+        }
+
+        .signin .content .form .links a:nth-child(2) {
+            color: #66FCF1;
+            font-weight: 600;
+        }
+
+        .signin .content .form .inputBox input[type="submit"] {
+            padding: 10px;
+            background: #66FCF1;
+            color: #000;
+            font-weight: 600;
+            font-size: 1.25em;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .signin .content .form .inputBox input[type="submit"]:hover {
+            background: #45A29E;
+        }
+
+        /* --- Social Login Buttons --- */
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px;
+            background: #333;
+            border-radius: 4px;
+            color: #fff;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .social-btn:hover {
+            background: #444;
+        }
+
+        /* --- Dark/Light Mode Styles --- */
+        body.dark-mode {
+            background-color: #0B0C10;
+        }
+
+        body.light-mode {
+            background-color: #f5f7fa;
+        }
+
+        .light-mode #animation-section::before {
+            background: linear-gradient(#e2e8f0, #3182ce, #e2e8f0);
+        }
+
+        .light-mode #animation-section span {
+            background: #e2e8f0;
+        }
+
+        .light-mode #animation-section span:hover {
+            background: #3182ce;
+        }
+
+        .light-mode .signin {
+            background: #f0f0f0;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .light-mode .signin .content h2 {
+            color: #3182ce;
+        }
+
+        .light-mode .signin .content .form .inputBox input {
+            background: #e0e0e0;
+            color: #1a1a1a;
+        }
+
+        .light-mode .signin .content .form .inputBox i {
+            color: #888;
+        }
+
+        .light-mode .signin .content .form .inputBox input:focus~i,
+        .light-mode .signin .content .form .inputBox input:valid~i {
+            color: #1a1a1a;
+        }
+
+        .light-mode .signin .content .form .links a {
+            color: #1a1a1a;
+        }
+
+        .light-mode .signin .content .form .links a:nth-child(2) {
+            color: #3182ce;
+        }
+
+        .light-mode .signin .content .form .inputBox input[type="submit"] {
+            background: #3182ce;
+            color: #fff;
+        }
+
+        .light-mode .signin .content .form .inputBox input[type="submit"]:hover {
+            background: #2b6cb0;
+        }
+
+        .light-mode .social-btn {
+            background: #e0e0e0;
+            color: #1a1a1a;
+        }
+
+        .light-mode .social-btn:hover {
+            background: #d0d0d0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 900px) {
+            #animation-section span {
+                width: calc(10vw - 2px);
+                height: calc(10vw - 2px);
+            }
+        }
+
+        @media (max-width: 600px) {
+            #animation-section span {
+                width: calc(20vw - 2px);
+                height: calc(20vw - 2px);
+            }
+        }
+    </style>
+</head>
+
+<body class="dark-mode">
+
+    <!-- Minimal Header -->
+    <header id="main-header" class="fixed w-full top-0 z-[1001] transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-2">
+                <img src="images/logo-1.png" alt="RitHan AI Logo" class="w-10 h-10"
+                    onerror="this.onerror=null;this.src='https://placehold.co/40x40/0B0C10/66FCF1?text=P';">
+            </a>
+            <button id="modeToggle"
+                class="flex items-center justify-center w-10 h-10 rounded-full bg-black/20 hover:bg-black/40 transition-colors">
+                <svg id="sunIcon" class="w-5 h-5 text-[#66FCF1] hidden" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                        clip-rule="evenodd" />
+                </svg>
+                <svg id="moonIcon" class="w-5 h-5 text-[#66FCF1]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                    fill="currentColor">
+                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <section id="animation-section">
+        <!-- Spans for animation will be generated by JS -->
+    </section>
+
+    <div class="signin">
+        <div class="content">
+            <h2 class="headline">Sign In</h2>
+            <form class="form" id="login-form" method="POST" action="/login">
+                <div class="inputBox">
+                    <input type="email" id="email" name="email" required placeholder=" ">
+                    <i>Email</i>
+                </div>
+                <div class="inputBox">
+                    <input type="password" id="password" name="password" required minlength="6" placeholder=" ">
+                    <i>Password</i>
+                    <button type="button" id="togglePassword"
+                        class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-400 hover:text-white">
+                        <svg id="eyeIcon" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <svg id="eyeSlashIcon" class="w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.572M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21L3 3" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="links">
+                    <a href="forgot_password.html">Forgot Password?</a>
+                    <a href="signup_patched.html">Sign Up</a>
+                </div>
+                <div class="inputBox">
+                    <input type="submit" value="Login">
+                </div>
+            </form>
+            <div class="flex items-center">
+                <div class="flex-grow border-t border-gray-600"></div>
+                <span class="mx-4 text-xs text-gray-400">OR</span>
+                <div class="flex-grow border-t border-gray-600"></div>
+            </div>
+            <a href="/login/google" class="social-btn">
+                <svg class="w-5 h-5 mr-3" viewBox="0 0 48 48">
+                    <path fill="#FFC107"
+                        d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z">
+                    </path>
+                    <path fill="#FF3D00"
+                        d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C16.318 4 9.656 8.337 6.306 14.691z">
+                    </path>
+                    <path fill="#4CAF50"
+                        d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.223 0-9.657-3.657-11.303-8H6.306C9.656 39.663 16.318 44 24 44z">
+                    </path>
+                    <path fill="#1976D2"
+                        d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571l6.19 5.238C42.012 35.846 44 30.138 44 24c0-1.341-.138-2.65-.389-3.917z">
+                    </path>
+                </svg>
+                Continue with Google
+            </a>
+            <a href="#" class="social-btn" style="cursor: not-allowed; opacity: 0.6;">
+                <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                </svg>
+                Continue with GitHub
+            </a>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- GENERATE ANIMATION SPANS ---
+            const section = document.getElementById('animation-section');
+            for (let i = 0; i < 256; i++) {
+                const span = document.createElement('span');
+                section.appendChild(span);
+            }
+
+            // --- THEME TOGGLE LOGIC ---
+            const modeToggle = document.getElementById('modeToggle');
+            const sunIcon = document.getElementById('sunIcon');
+            const moonIcon = document.getElementById('moonIcon');
+            const body = document.body;
+
+            function enableLightMode() {
+                body.classList.remove('dark-mode'); body.classList.add('light-mode');
+                sunIcon.classList.remove('hidden'); moonIcon.classList.add('hidden');
+                localStorage.setItem('colorMode', 'light');
+            }
+
+            function enableDarkMode() {
+                body.classList.remove('light-mode'); body.classList.add('dark-mode');
+                moonIcon.classList.remove('hidden'); sunIcon.classList.add('hidden');
+                localStorage.setItem('colorMode', 'dark');
+            }
+
+            const savedMode = localStorage.getItem('colorMode');
+            if (savedMode === 'light') {
+                enableLightMode();
+            } else {
+                enableDarkMode();
+            }
+
+            modeToggle.addEventListener('click', () => {
+                if (body.classList.contains('dark-mode')) {
+                    enableLightMode();
+                } else {
+                    enableDarkMode();
+                }
+                // Basic Form Validation
+                document.getElementById('login-form').addEventListener('submit', function (e) {
+                    let email = document.getElementById('email').value;
+                    let password = document.getElementById('password').value;
+
+                    if (!email.includes('@')) {
+                        alert("Please enter a valid email address!");
+                        e.preventDefault();
+                    }
+                    if (password.length < 6) {
+                        alert("Password must be at least 6 characters!");
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- ADDED: fetch-based login handler -->
+    <script>
+        (function () {
+            const form = document.getElementById("login-form");
+            if (!form) return;
+            form.addEventListener("submit", async function (e) {
+                e.preventDefault();
+                const email = document.getElementById("email").value.trim();
+                const password = document.getElementById("password").value;
+
+                // create / reuse message element
+                let msg = document.getElementById("login-msg");
+                if (!msg) {
+                    msg = document.createElement("p");
+                    msg.id = "login-msg";
+                    msg.style.marginTop = "8px";
+                    form.appendChild(msg);
+                }
+
+                if (!email.includes("@")) {
+                    msg.textContent = "Please enter a valid email address.";
+                    msg.style.color = "red";
+                    return;
+                }
+                if (password.length < 1) {
+                    msg.textContent = "Please enter your password.";
+                    msg.style.color = "red";
+                    return;
+                }
+
+                try {
+                    const res = await fetch("http://127.0.0.1:5000/login", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", credentials: "include" },
+                        body: JSON.stringify({ email, password, credentials: "include" })
+                    });
+                    const data = await res.json();
+                    if (!res.ok || data.error) {
+                        msg.textContent = data.error || "Login failed.";
+                        msg.style.color = "red";
+                        return;
+                    }
+                    msg.textContent = data.message || "Logged in!";
+                    msg.style.color = "#66FCF1";
+                    // store basic user in localStorage for demo purposes
+                    if (data.user) {
+                        localStorage.setItem("pv_user", JSON.stringify(data.user));
+                    }
+                    setTimeout(() => { window.location.href = "Dashboard.html"; }, 1200);
+                } catch (err) {
+                    console.error(err);
+                    msg.textContent = "Network error. Is the backend running?";
+                    msg.style.color = "red";
+                }
+            });
+        })();
+    </script>
+
+    <script id="password-toggle-setup">
+        document.addEventListener('DOMContentLoaded', function () {
+            const passwordInput = document.getElementById('password');
+            const togglePasswordBtn = document.getElementById('togglePassword');
+            const eyeIcon = document.getElementById('eyeIcon');
+            const eyeSlashIcon = document.getElementById('eyeSlashIcon');
+
+            if (togglePasswordBtn) {
+                togglePasswordBtn.addEventListener('click', () => {
+                    const isPassword = passwordInput.type === 'password';
+                    passwordInput.type = isPassword ? 'text' : 'password';
+
+                    // Icon ko badalna
+                    eyeIcon.classList.toggle('hidden', isPassword);
+                    eyeSlashIcon.classList.toggle('hidden', !isPassword);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
