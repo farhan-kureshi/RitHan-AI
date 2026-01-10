@@ -1,4 +1,7 @@
+.venv/
 .env
-RitHan.db
 __pycache__/
-venv/
+*.pyc
+*.db
+instance/
+.DS_Store

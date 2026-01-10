@@ -58,7 +58,6 @@ google = oauth.register(
     server_metadata_url='https://accounts.google.com/.well-known/openid-configuration'
 )
 
-
 # --- Database Configuration ---
 DATABASE = "RitHan.db"
 
@@ -615,7 +614,7 @@ def google_callback():
             session['is_admin'] = bool(user['is_admin'])
             session['profile_pic'] = picture # <-- YEH LINE SABSE ZAROORI HAI
 
-            return redirect('/Dashboard.html')
+            return redirect('http://localhost:8080//Dashboard.html')
 
     except Exception as e:
         print(f"Google OAuth Error: {e}")
@@ -1362,10 +1361,10 @@ def delete_image(image_id):
         print(f"Unexpected error deleting image {image_id} by user {user_id}: {e}")
         return jsonify({"error": "An unexpected server error occurred."}), 500
 
-# --- Static File Serving ---
-@app.route('/')
-def serve_index():
-    return send_from_directory('.', 'index.html')
+# # --- Static File Serving ---
+# @app.route('/')
+# def serve_index():
+#     return send_from_directory('.', 'index.html')
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
     if request.method == 'POST':
@@ -1405,11 +1404,6 @@ def reset_with_token(token):
         
     return render_template('reset_password.html', token=token)
 # Puraane serve_static function ko isse replace karein
-@app.route('/<path:filename>')
-def serve_static(filename):
-    if ".." in filename or filename.startswith("/"): return "Not Found", 404
-    if filename.lower() == "admin.html" and not session.get('is_admin'): return "Access Denied.", 403
-    return send_from_directory('.', filename)
 
 # --- Error Handlers ---
 @app.errorhandler(404)
