@@ -50,13 +50,13 @@
                     <img src="images/logo-1.png" alt="RitHan AI Logo" class="w-10 h-10">
                     <h1 class="text-2xl font-bold text-white">RitHan AI</h1>
                 </a>
-                <nav class="hidden md:flex items-center space-x-8">
+                <nav class="hidden lg:flex items-center space-x-8">
                     <a href="index.html" class="hover:text-[#66FCF1] transition-colors">Home</a>
                     <a href="features.html" class="hover:text-[#66FCF1] transition-colors">Features</a>
                     <a href="pricing.html" class="hover:text-[#66FCF1] transition-colors">Pricing</a>
                     <a href="community.html" class="hover:text-[#66FCF1] transition-colors">Community</a>
                 </nav>
-                <div id="logged-out-view" class="hidden md:flex items-center space-x-4">
+                <div id="logged-out-view" class="hidden lg:flex items-center space-x-4">
                     <a href="login_patched.html" class="btn-secondary px-4 py-2 rounded-lg font-semibold">Sign In</a>
                     <a href="Dashboard.html" class="btn-primary px-4 py-2 rounded-lg font-semibold">Get
                         Started</a>
@@ -79,7 +79,7 @@
 
 
 
-                <button id="mobile-menu-button" class="md:hidden text-white">
+                <button id="mobile-menu-button" class="lg:hidden text-white">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 6h16M4 12h16m-7 6h7"></path>
@@ -87,7 +87,7 @@
                 </button>
             </div>
             <!-- UPDATED Mobile Menu -->
-            <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full p-6">
+            <div id="mobile-menu" class="hidden lg:hidden absolute top-full left-0 w-full p-6">
                 <div class="flex flex-col space-y-4 text-center">
                     <a href="index.html" class="text-white text-lg hover:text-[#66FCF1] transition-colors">Home</a>
                     <a href="features.html"
@@ -112,23 +112,21 @@
 
                 <div class="container mx-auto px-6">
                     <!-- NAYI LAYOUT: GRID KA ISTEMAAL KIYA GAYA HAI -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="hero-grid grid grid-cols-1 lg:grid-cols-2 lg:gap-8 items-center">
 
                         <!-- Column 1: Text Content -->
                         <!-- YAHAN BADLAV KIYA GAYA HAI: z-10 CLASS ADD KI GAYI HAI -->
-                        <div class="text-center md:text-left z-10">
+                        <div class="hero-content text-center lg:text-left z-10">
                             <h2
                                 class="headline text-3xl md:text-5xl lg:text-6xl font-extrabold leading-tight h-24 md:h-32">
                                 <span id="typing-text" class="headline-gradient-dark"></span>
                                 <span class="inline-block w-2 h-12 md:h-16 bg-[#66FCF1] animate-pulse"></span>
                             </h2>
-
-                            </h2>
-                            <p class="mt-6 max-w-lg mx-auto md:mx-0 text-base md:text-lg">
+                            <p class="hero-copy lg:mt-6 max-w-lg mx-auto lg:mx-0 text-base md:text-lg">
                                 Bring your ideas to life. Design your custom image in no time with the RitHan AI
                                 Generator.
                             </p>
-                            <div class="mt-10">
+                            <div class="hero-cta lg:mt-10">
                                 <a href="Dashboard.html"
                                     class="btn-primary animate-glow text-base font-bold px-8 py-3 rounded-lg inline-block">
                                     Start Generating Now ✨
@@ -137,7 +135,7 @@
                         </div>
 
                         <!-- Column 2: 3D Model -->
-                        <div class="w-full h-[450px] md:h-[650px]">
+                        <div class="hero-scene w-full lg:h-[650px]">
                             <!-- <div class="w-full h-[250px] md:h-[600px]"> -->
 
                             <spline-viewer
@@ -151,11 +149,11 @@
 
             <!-- Rest of your HTML remains exactly the same -->
             <!-- How It Works Section -->
-            <section class="py-20">
-                <div class="container mx-auto px-6 text-center">
-                    <h3 class="text-3xl md:text-4xl font-bold text-white">Create Stunning Art in 3 Simple Steps</h3>
-                    <p class="mt-4 max-w-2xl mx-auto text-lg text-[#C5C6C7]">From idea to reality, faster than ever.</p>
-                    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-12">
+            <section class="steps-section py-12 sm:py-16 md:py-20">
+                <div class="container mx-auto px-5 sm:px-6 text-center">
+                    <h3 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight">Create Stunning Art in 3 Simple Steps</h3>
+                    <p class="mt-3 sm:mt-4 max-w-2xl mx-auto text-base sm:text-lg text-[#C5C6C7]">From idea to reality, faster than ever.</p>
+                    <div class="mt-8 sm:mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8 md:gap-12">
                         <div class="flex flex-col items-center step-item">
                             <div
                                 class="w-20 h-20 rounded-full bg-[#1F2833] flex items-center justify-center border-2 border-[#45A29E]">
@@ -189,13 +187,13 @@
 
             <!-- Live Gallery Showcase -->
             <!-- Creations From Our Community -->
-            <section class="py-20 bg-[#0B0C10] text-white">
-                <h2 class="text-3xl font-bold text-center text-[#66FCF1] mb-10">
+            <section class="community-section py-12 sm:py-16 md:py-20 bg-[#0B0C10] text-white">
+                <h2 class="text-2xl sm:text-3xl font-bold text-center text-[#66FCF1] mb-6 sm:mb-10 px-5 leading-tight">
                     Creations From Our Community
                 </h2>
 
                 <!-- Tabs -->
-                <div class="flex justify-center space-x-6 mb-10">
+                <div class="gallery-tabs flex justify-center gap-6 mb-10">
                     <button class="tab-btn active text-[#66FCF1]" data-category="trending">Trending</button>
                     <button class="tab-btn" data-category="newest">Newest</button>
                     <button class="tab-btn" data-category="photo">Photorealistic</button>
@@ -306,8 +304,8 @@
                         wrapper.innerHTML += `
       <div class="swiper-slide relative overflow-hidden rounded-xl group">
         <img src="${item.img}" 
-             class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110 rounded-xl">
-        <div class="absolute bottom-0 left-0 w-full bg-black bg-opacity-70 text-white text-sm p-3
+             class="w-full h-60 sm:h-80 object-cover transition-transform duration-500 group-hover:scale-110 rounded-xl">
+        <div class="prompt-overlay absolute bottom-0 left-0 w-full bg-black bg-opacity-70 text-white text-sm p-3
                     transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
           ${item.prompt}
         </div>
@@ -332,13 +330,13 @@
             </script>
 
             <!-- FAQ Section -->
-            <section class="py-20">
+            <section class="faq-section py-12 sm:py-16 md:py-20">
                 <div class="container mx-auto px-6">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 items-center">
                         <div>
-                            <h3 class="text-3xl md:text-4xl font-bold text-white">Have questions?</h3>
-                            <h4 class="text-3xl md:text-4xl font-bold text-[#66FCF1]">We have answers!</h4>
-                            <p class="mt-4 text-lg text-[#C5C6C7]">Want to know more? You can email us anytime at <a
+                            <h3 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white">Have questions?</h3>
+                            <h4 class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#66FCF1]">We have answers!</h4>
+                            <p class="mt-4 text-base sm:text-lg text-[#C5C6C7]">Want to know more? You can email us anytime at <a
                                     href="mailto:web.support@RitHanai.art"
                                     class="text-[#66FCF1] underline">web.support@RitHanai.art</a></p>
                             <a href="Dashboard.html"

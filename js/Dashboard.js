@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const enhancePromptToggle = document.getElementById('enhance-prompt-toggle');
     const menuButton = document.getElementById('menu-button');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const closeSidebarButton = document.getElementById('close-sidebar');
     const allPages = document.querySelectorAll('.page-view');
     const navLinks = document.querySelectorAll('.sidebar-link');
     const generationSettings = document.getElementById('generation-settings');
@@ -74,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let state = {
         isLoggedIn: false,
         isPro: false,
+        profilePic: null,
         userName: "Guest User",
         credits: 4,
         maxCredits: 4,
@@ -100,6 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
         "Underwater city with glass domes and glowing sea creatures, fantasy",
         "Futuristic library with floating books and holographic displays",
     ];
+    const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 
     // ==================== CORE FUNCTIONS ====================
     function switchPage(pageId) {
@@ -123,6 +126,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (accountDropdown) {
             accountDropdown.classList.add('hidden');
         }
+        if (accountButton) accountButton.setAttribute('aria-expanded', 'false');
+        const main = document.getElementById('main-content');
+        if (main) main.scrollTop = 0;
     }
     function updateSettingsDisplay() {
         // Helper function to find the image URL for a selected value
@@ -178,6 +184,25 @@ document.addEventListener('DOMContentLoaded', function () {
     function renderUI() {
         if (userNameEl) userNameEl.textContent = state.userName;
         if (dropdownUsername) dropdownUsername.textContent = state.userName;
+        if (userAvatarEl) {
+            userAvatarEl.replaceChildren();
+            if (state.profilePic) {
+                const picture = document.createElement('img');
+                picture.src = state.profilePic;
+                picture.alt = state.userName;
+                picture.className = 'w-full h-full rounded-full object-cover';
+                userAvatarEl.appendChild(picture);
+            } else {
+                userAvatarEl.textContent = state.userName.charAt(0).toUpperCase();
+            }
+        }
+        const statusBadge = document.getElementById('user-status-badge');
+        const avatarWrapper = document.getElementById('user-avatar-wrapper');
+        if (statusBadge) {
+            statusBadge.className = state.isLoggedIn ? `status-badge ${state.isPro ? 'pro-badge' : 'free-badge'}` : '';
+            statusBadge.textContent = state.isLoggedIn ? (state.isPro ? 'PRO' : 'FREE') : '';
+        }
+        if (avatarWrapper) avatarWrapper.className = `relative ${state.isLoggedIn ? (state.isPro ? 'pro-avatar-border' : 'free-avatar-border') : ''}`;
         if (creditCounter) {
             creditCounter.innerHTML = `Credits: ${state.isPro ? '<span class="animated-unlimited">Unlimited</span>' : state.credits}`;
         }
@@ -192,6 +217,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (generateBtn) {
             generateBtn.disabled = !state.isPro && state.credits < state.numImages;
             generateBtn.textContent = generateBtn.disabled ? 'No Credits' : 'Generate ✨';
+        }
+        if (enhancePromptToggle) {
+            enhancePromptToggle.disabled = !state.isLoggedIn;
+            enhancePromptToggle.title = state.isLoggedIn ? 'Enhance your prompt' : 'Sign in to enhance prompts';
         }
         renderGalleries();
         renderHistory();
@@ -215,11 +244,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const item = document.createElement('div');
         item.className = 'gallery-item relative rounded-lg overflow-hidden cursor-pointer group';
         // Escape alt text and data-prompt just in case
-        const safePrompt = image.prompt.replace(/"/g, '&quot;'); 
+        const safePrompt = escapeHTML(image.prompt);
         item.innerHTML = `
         <img src="${image.src}" alt="${safePrompt}" class="w-full h-full object-cover aspect-[3/4] transition-transform duration-300 group-hover:scale-105 bg-[var(--bg-card)]" onerror="this.src='https://placehold.co/300x400/1A202C/C5C6C7?text=Load+Error'; this.onerror=null;">
         <div class="overlay absolute inset-0 bg-black/70 p-2 flex flex-col justify-between opacity-0 group-hover:opacity-100 transition-opacity">
-            <p class="text-white text-xs font-medium overflow-hidden text-ellipsis line-clamp-3">${image.prompt}</p>
+            <p class="text-white text-xs font-medium overflow-hidden text-ellipsis line-clamp-3">${safePrompt}</p>
             <div class="flex items-center justify-between gap-1">
                 <button class="like-btn p-1.5 bg-white/20 rounded-full hover:bg-white/40 ${isLiked ? 'text-red-500' : 'text-white'}" data-id="${image.id}">
                     <svg class="like-icon w-4 h-4 pointer-events-none" fill="${isLiked ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
@@ -266,6 +295,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Confirm with the user
         if (!confirm("Are you sure you want to delete this image? This cannot be undone.")) {
+            return;
+        }
+
+        if (!state.isLoggedIn) {
+            state.myImages = state.myImages.filter(item => item && String(item.id) !== String(imageId));
+            state.likedImages = state.likedImages.filter(item => item && String(item.id) !== String(imageId));
+            saveGuestSession();
+            renderGalleries();
             return;
         }
 
@@ -331,7 +368,7 @@ function renderGalleries() {
     if (myImagesGalleryContainer) {
         myImagesGalleryContainer.innerHTML = ''; // Clear previous items
         const emptyEl = document.getElementById('my-images-empty');
-        if (emptyEl) emptyEl.classList.toggle('hidden', state.myImages.length === 0);
+        if (emptyEl) emptyEl.classList.toggle('hidden', state.myImages.length > 0);
 
         state.myImages.forEach(img => {
             const card = createImageCard(img); // Create card (might return null)
@@ -352,7 +389,7 @@ function renderGalleries() {
     if (likedImagesGalleryContainer) {
         likedImagesGalleryContainer.innerHTML = ''; // Clear previous items
         const emptyEl = document.getElementById('liked-images-empty');
-        if (emptyEl) emptyEl.classList.toggle('hidden', state.likedImages.length === 0);
+        if (emptyEl) emptyEl.classList.toggle('hidden', state.likedImages.length > 0);
 
         state.likedImages.forEach(img => {
             const card = createImageCard(img); // Create card (might return null)
@@ -400,10 +437,10 @@ function renderGalleries() {
                 const item = document.createElement('div');
                 item.className = 'bg-[var(--bg-sidebar)] p-3 rounded-lg flex justify-between items-center gap-2'; // Added gap
                 item.innerHTML = `
-                <p class="text-[var(--text-primary)] truncate flex-1" title="${historyItem.prompt}">${historyItem.prompt}</p>
+                <p class="text-[var(--text-primary)] truncate flex-1" title="${escapeHTML(historyItem.prompt)}">${escapeHTML(historyItem.prompt)}</p>
                 <div class="flex-shrink-0 flex gap-2">
                      <button class="reuse-prompt-btn text-xs bg-[var(--accent-primary)] text-black px-3 py-1 rounded-md font-semibold" 
-                            data-prompt="${historyItem.prompt}">Reuse</button>
+                            data-prompt="${escapeHTML(historyItem.prompt)}">Reuse</button>
                      <button class="delete-history-btn text-xs bg-red-600 text-white px-2 py-1 rounded-md hover:bg-red-700" 
                             data-history-id="${historyItem.id}" title="Delete this prompt">
                             <svg class="w-3 h-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
@@ -436,6 +473,13 @@ function renderGalleries() {
 
         // Confirm with the user
         if (!confirm("Are you sure you want to delete this prompt from your history?")) {
+            return;
+        }
+
+        if (!state.isLoggedIn) {
+            state.promptHistory = state.promptHistory.filter(item => item && String(item.id) !== String(historyId));
+            saveGuestSession();
+            renderHistory();
             return;
         }
 
@@ -688,6 +732,15 @@ function renderGalleries() {
             return;
         }
 
+        // Yeh check karega ki credits hain ya nahi
+        if (!state.isPro && state.credits < state.numImages) {
+            showError(`Not enough credits. You need ${state.numImages} credits to generate.`);
+            return;
+        }
+        if (!state.isLoggedIn && state.numImages > 1) {
+            showError('Guests can generate one image at a time. Sign in for multiple images.');
+            return;
+        }
         if (welcomeScreen && welcomeScreen.style.display !== 'none') {
             welcomeScreen.style.display = 'none';
             chatView.style.display = 'flex';
@@ -695,23 +748,17 @@ function renderGalleries() {
             chatView.style.height = '100%';
         }
 
-        // Yeh check karega ki credits hain ya nahi
-        if (!state.isPro && state.credits < state.numImages) {
-            showError(`Not enough credits. You need ${state.numImages} credits to generate.`);
-            return;
-        }
-
         const generationSettings = {
             prompt: userPrompt,
+            currentCredits: state.credits,
             numImages: state.numImages,
             aspectRatio: state.selectedAspectRatio,
             style: state.selectedStyle,
             lighting: state.selectedLighting,
             camera: state.selectedCamera,
             enhancePrompt: state.enhancePrompt,
-            guidanceImage: state.guidanceImage, // Yeh line pehle se hogi
-            imageStrength: state.imageStrength, // <-- YEH NAYI LINE ADD KAREIN // Yeh line add karein
-            guidanceImage: state.guidanceImage // Yeh line add karein
+            guidanceImage: state.guidanceImage,
+            imageStrength: state.imageStrength
         };
 
         addMessageToChat('user', userPrompt);
@@ -739,8 +786,6 @@ function renderGalleries() {
             }
 
             if (data.image_data_list && data.image_data_list.length > 0) {
-                addMessageToChat('ai', { imageList: data.image_data_list });
-
                 // Sabhi images ko 'My Images' gallery mein add karein (GUEST KE LIYE TEMP ID KE SAATH)
                 data.image_data_list.forEach(imgObject => {
                     // Agar user guest hai aur image ka ID null/undefined hai, toh ek temp ID do
@@ -750,27 +795,12 @@ function renderGalleries() {
                     }
                     state.myImages.unshift(imgObject);
                 });
+                addMessageToChat('ai', { imageList: data.image_data_list });
             }
-            // History update karein (OBJECT ke saath)
-            // Pehle check karein ki yeh prompt pehle se hai ya nahi
-            const alreadyExists = state.promptHistory.some(item => item && item.prompt === userPrompt);
-            if (!alreadyExists) {
-                // Naya object banayein. Logged-in user ke liye ID backend se aayegi (abhi null rakhein), 
-                // Guest ke liye bhi null rakhein kyunki hum delete support nahi kar rahe
-                const newHistoryItem = {
-                    // ID ko abhi handle karna complex hai, isse backend se sync karna padega
-                    // For now, let's keep it simple and maybe skip adding to state here,
-                    // relying on fetchUserData to refresh after login.
-                    // OR assign a temporary ID for potential client-side deletion (needs more logic)
-                    id: `temp_${Date.now()}`, // Temporary ID, won't match backend
-                    prompt: userPrompt
-                };
-                // state.promptHistory.unshift(newHistoryItem); // Add to beginning (optional)
-
-                // === BETTER APPROACH FOR NOW ===
-                // Don't add directly to state here. Rely on fetching history from backend after login.
-                // For guests, history might not persist reliably across sessions anyway.
-                // If you NEED instant update, you have to decide how to handle IDs.
+            if (state.isLoggedIn) {
+                await fetchUserData();
+            } else {
+                state.promptHistory.push({ id: `hist_guest_${Date.now()}`, prompt: userPrompt });
             }
 
             // === CREDIT DEBUG LOGS START ===
@@ -880,8 +910,8 @@ function renderGalleries() {
     function setTheme(theme) {
         document.documentElement.className = theme === 'light' ? 'light-mode' : 'dark-mode';
         localStorage.setItem('colorMode', theme);
-        if (lightThemeBtn) lightThemeBtn.classList.toggle('bg-gray-700', theme !== 'light');
-        if (darkThemeBtn) darkThemeBtn.classList.toggle('bg-gray-700', theme === 'light');
+        if (lightThemeBtn) lightThemeBtn.classList.toggle('bg-gray-700', theme === 'light');
+        if (darkThemeBtn) darkThemeBtn.classList.toggle('bg-gray-700', theme !== 'light');
     }
 
     function showLoading(isLoading) {
@@ -1051,6 +1081,7 @@ function loadGuestSession() {
         }
     }
     function handleImageUpload(file) {
+        if (!state.isLoggedIn) { showError('Sign in to use image guidance.'); return; }
         if (!file.type.startsWith('image/')) { showError('Please select an image file.'); return; }
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -1227,7 +1258,7 @@ function loadGuestSession() {
         const panelContent = `<div class="w-full bg-[var(--bg-sidebar)] border-l border-[var(--border-color)] h-full flex flex-col"><header class="p-4 flex justify-between items-center border-b border-[var(--border-color)] flex-shrink-0"><h3 class="text-lg font-semibold text-[var(--text-primary)]">${data.title}</h3><button id="close-panel-btn" class="text-2xl hover:text-[var(--text-primary)]">&times;</button></header><div class="p-4 overflow-y-auto custom-scrollbar grid ${gridClass}">${optionsHtml}</div></div>`;
         settingsPanelContainer.innerHTML = panelContent;
 
-        if (window.innerWidth <= 768) {
+        if (window.innerWidth < 768) {
             // Mobile - bottom sheet (UNCHANGED)
             settingsPanelOverlay.classList.remove('hidden');
             settingsPanelContainer.classList.remove('hidden');
@@ -1260,7 +1291,7 @@ function loadGuestSession() {
     function closeSettingsPanel() {
         isPanelTransitioning = true;
 
-        if (window.innerWidth <= 768) {
+        if (window.innerWidth < 768) {
             // Mobile - bottom sheet animation (UNCHANGED)
             settingsPanelContainer.classList.remove('show');
             settingsPanelOverlay.classList.add('hidden');
@@ -1281,6 +1312,25 @@ function loadGuestSession() {
     }
     // ==================== EVENT LISTENERS ====================
     // Menu button functionality
+    function closeSidebar() {
+        sidebar.classList.add('-translate-x-full');
+        if (sidebarOverlay) sidebarOverlay.style.display = 'none';
+        if (menuButton) menuButton.setAttribute('aria-expanded', 'false');
+    }
+    if (closeSidebarButton) closeSidebarButton.addEventListener('click', closeSidebar);
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+            closeSidebar();
+            if (accountDropdown) accountDropdown.classList.add('hidden');
+            if (settingsPanelContainer && !settingsPanelContainer.classList.contains('hidden')) closeSettingsPanel();
+        }
+    });
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768) {
+            if (sidebarOverlay) sidebarOverlay.style.display = 'none';
+            sidebar.classList.add('-translate-x-full');
+        }
+    });
     if (menuButton) {
         menuButton.addEventListener('click', () => {
             if (window.innerWidth >= 768) {
@@ -1295,11 +1345,13 @@ function loadGuestSession() {
                 // Mobile - existing functionality
                 sidebar.classList.toggle('-translate-x-full');
                 sidebarOverlay.style.display = sidebar.classList.contains('-translate-x-full') ? 'none' : 'block';
+                menuButton.setAttribute('aria-expanded', String(!sidebar.classList.contains('-translate-x-full')));
             }
         });
     }
     if (enhancePromptToggle) {
         enhancePromptToggle.addEventListener('change', () => {
+            if (!state.isLoggedIn) { enhancePromptToggle.checked = false; showError('Sign in to enhance prompts.'); return; }
             state.enhancePrompt = enhancePromptToggle.checked;
         });
     }
@@ -1316,12 +1368,12 @@ function loadGuestSession() {
 
     if (sidebarOverlay) {
         sidebarOverlay.addEventListener('click', () => {
-            sidebar.classList.add('-translate-x-full');
-            sidebarOverlay.style.display = 'none';
+            closeSidebar();
         });
     }
 
     navLinks.forEach(link => { if (link.dataset.page) { link.addEventListener('click', (e) => { e.preventDefault(); switchPage(link.dataset.page); }); } });
+    document.querySelectorAll('[data-go-page]').forEach(button => button.addEventListener('click', () => switchPage(button.dataset.goPage)));
 
     accordions.forEach(header => {
         header.addEventListener("click", () => {
@@ -1337,7 +1389,7 @@ function loadGuestSession() {
     setupToggle(toggleSettingsBtn, settingsLinks);
     setupToggle(toggleSupportBtn, supportLinks);
 
-    if (accountButton) { accountButton.addEventListener('click', (e) => { e.stopPropagation(); accountDropdown.classList.toggle('hidden'); }); }
+    if (accountButton) { accountButton.addEventListener('click', (e) => { e.stopPropagation(); accountDropdown.classList.toggle('hidden'); accountButton.setAttribute('aria-expanded', String(!accountDropdown.classList.contains('hidden'))); }); }
     document.addEventListener('click', (e) => { if (accountDropdown && !accountButton.contains(e.target) && !accountDropdown.contains(e.target)) { accountDropdown.classList.add('hidden'); } });
     if (lightThemeBtn) lightThemeBtn.addEventListener('click', () => setTheme('light'));
     if (darkThemeBtn) darkThemeBtn.addEventListener('click', () => setTheme('dark'));
@@ -1352,6 +1404,10 @@ function loadGuestSession() {
         numImageButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 const value = parseInt(btn.dataset.value);
+                if (!state.isLoggedIn && value > 1) {
+                    showError('Guests can generate one image at a time. Sign in for multiple images.');
+                    return;
+                }
 
                 // Allow selection regardless of pro status for UI flexibility, but check during generation
                 // if (value > 1 && !state.isPro) { 
@@ -1360,6 +1416,7 @@ function loadGuestSession() {
                 // } 
 
                 state.numImages = value;
+                if (generateBtn) generateBtn.disabled = !state.isPro && state.credits < value;
 
                 numImageButtons.forEach(b => {
                     b.classList.remove('bg-[var(--accent-primary)]', 'text-black');
@@ -1450,12 +1507,18 @@ function loadGuestSession() {
             // Set a new timeout (e.g., 300ms)
             searchTimeout = setTimeout(async () => {
                 try {
-                    // Backend API ko call karein
-                    const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`, { credentials: 'include' });
-                    if (!response.ok) {
-                        throw new Error('Search request failed');
+                    let results;
+                    if (state.isLoggedIn) {
+                        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`, { credentials: 'include' });
+                        if (!response.ok) throw new Error('Search request failed');
+                        results = await response.json();
+                    } else {
+                        const matches = text => String(text || '').toLowerCase().includes(query.toLowerCase());
+                        results = [
+                            ...state.promptHistory.filter(item => matches(item.prompt)).map(item => ({type:'history', text:item.prompt})),
+                            ...state.myImages.filter(item => matches(item.prompt)).map(item => ({type:'image', text:item.prompt, imageUrl:item.src}))
+                        ].slice(0, 20);
                     }
-                    const results = await response.json();
 
                     searchResultsContainer.innerHTML = ''; // Clear loading message
 
@@ -1469,7 +1532,7 @@ function loadGuestSession() {
                                 // History item ka layout
                                 contentHTML = `
                                 <div class="flex-1 truncate">
-                                    <p class="text-[var(--text-primary)] text-sm truncate">${item.text}</p>
+                                    <p class="text-[var(--text-primary)] text-sm truncate">${escapeHTML(item.text)}</p>
                                     <p class="text-xs text-gray-500">Prompt History</p>
                                 </div>
                                 <button class="reuse-prompt-btn text-xs bg-[var(--accent-primary)] text-black px-3 py-1 rounded-md font-semibold flex-shrink-0">Reuse</button>
@@ -1495,9 +1558,9 @@ function loadGuestSession() {
                             } else if (item.type === 'image' || item.type === 'liked_image') {
                                 // Image item ka layout
                                 contentHTML = `
-                                <img src="${item.imageUrl}" alt="Generated image" class="w-12 h-12 object-cover rounded-md flex-shrink-0">
+                                <img src="${escapeHTML(item.imageUrl)}" alt="Generated image" class="w-12 h-12 object-cover rounded-md flex-shrink-0">
                                 <div class="flex-1 truncate">
-                                    <p class="text-[var(--text-primary)] text-sm truncate">${item.text}</p>
+                                    <p class="text-[var(--text-primary)] text-sm truncate">${escapeHTML(item.text)}</p>
                                     <p class="text-xs text-gray-500">${item.type === 'liked_image' ? 'Liked Image' : 'Generated Image'}</p>
                                 </div>
                                 <button class="view-image-btn text-xs bg-gray-600 text-white px-3 py-1 rounded-md font-semibold flex-shrink-0">View</button>
@@ -1526,7 +1589,7 @@ function loadGuestSession() {
             }, 300); // 300ms wait karega type karne ke baad
         });
     }
-    if (imageDropZone) { imageDropZone.addEventListener('click', () => imageUploadInput.click()); imageDropZone.addEventListener('dragover', (e) => { e.preventDefault(); imageDropZone.classList.add('border-[var(--accent-primary)]'); }); imageDropZone.addEventListener('dragleave', () => imageDropZone.classList.remove('border-[var(--accent-primary)]')); imageDropZone.addEventListener('drop', (e) => { e.preventDefault(); if (e.dataTransfer.files.length) handleImageUpload(e.dataTransfer.files[0]); }); }
+    if (imageDropZone) { imageDropZone.addEventListener('click', () => { if (!state.isLoggedIn) { showError('Sign in to use image guidance.'); return; } imageUploadInput.click(); }); imageDropZone.addEventListener('dragover', (e) => { e.preventDefault(); imageDropZone.classList.add('border-[var(--accent-primary)]'); }); imageDropZone.addEventListener('dragleave', () => imageDropZone.classList.remove('border-[var(--accent-primary)]')); imageDropZone.addEventListener('drop', (e) => { e.preventDefault(); if (e.dataTransfer.files.length) handleImageUpload(e.dataTransfer.files[0]); }); }
     if (imageUploadInput) { imageUploadInput.addEventListener('change', () => { if (imageUploadInput.files.length) handleImageUpload(imageUploadInput.files[0]); }); }
     if (removeImageBtn) { removeImageBtn.addEventListener('click', (e) => { e.stopPropagation(); removeUploadedImage(); }); }
     if (promptAssistantBtn) { promptAssistantBtn.addEventListener('click', () => { promptSuggestionsBox.classList.toggle('hidden'); if (!promptSuggestionsBox.classList.contains('hidden')) renderPromptSuggestions(); }); }
@@ -1553,6 +1616,7 @@ function loadGuestSession() {
                 state.isPro = profileData.isPro;
                 state.userName = profileData.fullname;
                 state.credits = profileData.credits;
+                state.profilePic = profileData.profile_pic || null;
 
                 // User ka data fetch karo (Likes, Images, History)
                 await fetchUserData();

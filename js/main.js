@@ -8,11 +8,33 @@ const accordionHeaders = document.querySelectorAll('.accordion-header');
 const mainHeader = document.getElementById('main-header');
 const backToTopButton = document.getElementById('back-to-top');
 
+const stepItems = document.querySelectorAll('.steps-section .step-item');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (stepItems.length && window.matchMedia('(max-width: 639px)').matches && !reduceMotion && 'IntersectionObserver' in window) {
+    const stepObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('reveal-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    stepItems.forEach(item => {
+        item.classList.add('reveal-pending');
+        stepObserver.observe(item);
+    });
+}
+
 
 function startTypingAnimation() {
     const typingTextElement = document.getElementById('typing-text');
     if (typingTextElement) {
         const textToType = "Turn Text to <span class='text-[#00FFFF]'>Image</span>, in Seconds.";
+        if (reduceMotion) {
+            typingTextElement.innerHTML = textToType;
+            return;
+        }
         let i = 0;
         typingTextElement.innerHTML = '';
 

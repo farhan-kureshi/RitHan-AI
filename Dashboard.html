@@ -38,6 +38,7 @@
         flex-shrink-0 flex flex-col custom-scrollbar overflow-y-auto z-50">
 
             <!-- Logo -->
+            <button id="close-sidebar" class="sidebar-close" type="button" aria-label="Close menu">&times;</button>
             <a href="index.html"
                 class="littlnavbar flex items-center justify-center h-20 border-b border-[var(--border-color)] flex-shrink-0">
                 <img src="images/logo-1.png" alt="Logo" class="w-10 h-10"
@@ -458,7 +459,7 @@
                                     <button id="prompt-assistant-btn" title="Prompt Assistant"
                                         class="p-2 rounded-full hover:bg-white/10 text-xl flex-shrink-0">✨</button>
                                     <input id="prompt-input" type="text"
-                                        placeholder="Describe your ideas and generate..."
+                                        placeholder="Describe your image..."
                                         class="w-full bg-transparent text-[var(--text-primary)] placeholder-[var(--text-secondary)] px-3 focus:outline-none">
                                     <button id="generate-btn"
                                         class="generate-btn bg-[var(--accent-primary)] text-black font-semibold px-6 py-3 rounded-full flex-shrink-0 hover:bg-[var(--accent-secondary)] transition-all disabled:bg-gray-500 disabled:cursor-not-allowed">
@@ -485,13 +486,12 @@
                         <p class="text-gray-400 mt-4 text-lg">You haven't generated any images yet.</p>
                         <button
                             class="mt-4 bg-[var(--accent-primary)] text-black px-6 py-2 rounded-lg font-semibold hover:bg-[var(--accent-secondary)] transition-colors"
-                            onclick="switchPage('text-to-image')">
+                            data-go-page="text-to-image">
                             Start Creating
                         </button>
                     </div>
                 </div>
 
-`1
                 <!-- PAGE: Liked Images -->
                 <div id="page-liked-images" class="page-view hidden">
                     <h1 class="text-3xl font-bold text-white mb-6 headline">Liked Images</h1>
@@ -507,8 +507,8 @@
                         <p class="text-gray-400 mt-4 text-lg">Explore the feed and like your favorites!</p>
                         <button
                             class="mt-4 bg-[var(--accent-primary)] text-black px-6 py-2 rounded-lg font-semibold hover:bg-[var(--accent-secondary)] transition-colors"
-                            onclick="switchPage('text-to-image')">
-                            Browse Community
+                            data-go-page="text-to-image">
+                            Start Creating
                         </button>
                     </div>
                 </div>
@@ -531,11 +531,8 @@
                 <div id="page-prompt-assistant" class="page-view hidden">
                     <h1 class="text-3xl font-bold text-white mb-6 headline">Prompt Assistant</h1>
                     <div class="max-w-4xl mx-auto bg-[var(--bg-sidebar)] p-6 rounded-lg">
-                        <h2 class="text-xl font-semibold text-[var(--accent-primary)] mb-4">Generate creative
-                            prompts with AI</h2>
-                        <p class="mb-6">Describe what you're looking for, and our AI will suggest compelling
-                            prompts
-                            to use for image generation.</p>
+                        <h2 class="text-xl font-semibold text-[var(--accent-primary)] mb-4">Generate creative prompt ideas</h2>
+                        <p class="mb-6">Describe what you're looking for and get ready-to-use prompts for image generation.</p>
 
                         <div class="mb-6">
                             <label for="prompt-idea"
@@ -730,161 +727,7 @@
 
     <script src="/js/Dashboard.js"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Saare zaroori elements ko yahan select kiya gaya hai
-            const toolIds = ['tools-links', 'toggle-tools'];
-            const settingIds = ['settings-links', 'generation-settings', 'settings-panel-container', 'toggle-settings'];
 
-            // Yeh function Pro features ko hide/show karta hai
-            function setProtectedVisible(isVisible) {
-                const ids = [...toolIds, ...settingIds];
-                ids.forEach(id => {
-                    const el = document.getElementById(id);
-                    if (!el) return;
-                    if (isVisible) {
-                        el.classList.remove('hidden');
-                        el.style.display = '';
-                    } else {
-                        el.classList.add('hidden');
-                        el.style.display = 'none';
-                    }
-                });
-            }
-
-            // === YEH SABSE ZAROORI FUNCTION HAI ===
-            function updateUIAfterAuth(userData) {
-                const nameEl = document.getElementById('user-name');
-                const ddNameEl = document.getElementById('dropdown-username');
-                const welcomeMsg = document.getElementById("welcome-message");
-                const creditCounter = document.getElementById('credit-counter');
-                const userAvatarEl = document.getElementById('user-avatar');
-                const avatarWrapper = document.getElementById('user-avatar-wrapper');
-                const statusBadge = document.getElementById('user-status-badge');
-                const userDetailsWrapper = document.getElementById('user-details-wrapper');
-
-                const isLoggedIn = userData && userData.loggedIn;
-                const isPro = isLoggedIn && userData.isPro;
-                const name = isLoggedIn ? (userData.name || 'User') : 'Guest User';
-                const credits = isLoggedIn ? userData.credits : 4;
-
-                // User details update
-                if (nameEl) nameEl.textContent = name;
-                if (ddNameEl) ddNameEl.textContent = name;
-                if (welcomeMsg) {
-                    welcomeMsg.textContent = `Welcome to RitHan AI, ${name}!`;
-                    welcomeMsg.classList.remove('animate-typing');
-                    void welcomeMsg.offsetWidth;
-                    welcomeMsg.classList.add('animate-typing');
-                }
-
-                if (creditCounter) {
-                    if (isPro) {
-                        creditCounter.innerHTML = `Credits: <span class="animated-unlimited">Unlimited</span>`;
-                    } else {
-                        creditCounter.textContent = `Credits: ${credits}`;
-                    }
-                }
-
-                if (userAvatarEl) {
-                    const picUrl = userData.profile_pic;
-                    if (picUrl) {
-                        userAvatarEl.innerHTML = `<img src="${picUrl}" alt="${name}" class="w-full h-full rounded-full object-cover">`;
-                    } else {
-                        userAvatarEl.textContent = name.charAt(0).toUpperCase();
-                    }
-                }
-
-                // Reset all classes first
-                statusBadge.className = '';
-                avatarWrapper.className = 'relative';
-
-                if (isLoggedIn) {
-                    statusBadge.classList.add('status-badge');
-                    if (userDetailsWrapper) userDetailsWrapper.classList.remove('hidden');
-                    if (isPro) {
-                        statusBadge.textContent = 'PRO';
-                        statusBadge.classList.add('pro-badge');
-                        avatarWrapper.classList.add('pro-avatar-border');
-                    } else {
-                        statusBadge.textContent = 'FREE';
-                        statusBadge.classList.add('free-badge');
-                        avatarWrapper.classList.add('free-avatar-border');
-                    }
-                } else {
-                    statusBadge.textContent = '';
-                    avatarWrapper.classList.remove('pro-avatar-border', 'free-avatar-border');
-                    if (userDetailsWrapper) userDetailsWrapper.classList.remove('hidden');
-                }
-
-                const loggedOutView = document.getElementById("logged-out-view");
-                const loggedInView = document.getElementById("logged-in-view");
-
-                if (isLoggedIn) {
-                    localStorage.setItem('RitHan_user', JSON.stringify(userData));
-                    setProtectedVisible(true);
-                    if (loggedOutView) loggedOutView.classList.add("hidden");
-                    if (loggedInView) loggedInView.classList.remove("hidden");
-                } else {
-                    localStorage.removeItem('RitHan_user');
-                    setProtectedVisible(false);
-                    if (loggedOutView) loggedOutView.classList.remove("hidden");
-                    if (loggedInView) loggedInView.classList.add("hidden");
-                }
-            }
-
-            async function checkAuthStatus() {
-                try {
-                    const res = await fetch('/check-auth', { credentials: 'include' });
-                    const data = await res.json();
-
-                    if (data.loggedIn) {
-                        const profileRes = await fetch('/api/user/profile', { credentials: 'include' });
-                        if (!profileRes.ok) throw new Error('Failed to fetch profile');
-                        const profileData = await profileRes.json();
-
-                        if (window.state) {
-                            window.state.isLoggedIn = true;
-                            window.state.userName = profileData.fullname;
-                            window.state.credits = profileData.credits;
-                            window.state.isPro = profileData.isPro;
-                        }
-                        updateUIAfterAuth({
-                            loggedIn: true,
-                            name: profileData.fullname,
-                            credits: profileData.credits,
-                            isPro: profileData.isPro,
-                            profile_pic: profileData.profile_pic
-                        });
-                        if (window.fetchUserData) {
-                            window.fetchUserData();
-                        }
-                    } else {
-                        updateUIAfterAuth({ loggedIn: false });
-                    }
-                } catch (e) {
-                    console.error('Auth check failed:', e);
-                    updateUIAfterAuth({ loggedIn: false });
-                }
-            }
-
-            async function handleLogout() {
-                try {
-                    await fetch('/logout', { method: 'POST', credentials: 'include' });
-                } catch (e) {
-                    console.warn('Logout error', e);
-                } finally {
-                    updateUIAfterAuth({ loggedIn: false });
-                    window.location.href = 'index.html';
-                }
-            }
-
-            setProtectedVisible(false);
-            const signOutBtn = document.getElementById('sign-out-btn');
-            if (signOutBtn) signOutBtn.addEventListener('click', handleLogout);
-            checkAuthStatus();
-        });
-    </script>
 
 </body>
 

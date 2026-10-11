@@ -30,7 +30,9 @@ load_dotenv()
 app = Flask(__name__, template_folder='.') 
 # Yeh line frontend (port 8080) se aane waali requests ko allow karegi
 CORS(app, origins=["http://127.0.0.1:8080", "http://localhost:8080"], supports_credentials=True)
-app.config['SECRET_KEY'] = 'your-super-secret-key-for-RitHan'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+if not app.config['SECRET_KEY']:
+    raise RuntimeError('SECRET_KEY must be configured before starting RitHan AI')
 app.config['SESSION_REFRESH_EACH_REQUEST'] = True  # ✅ Har request par session refresh
 s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
@@ -1218,6 +1220,13 @@ def get_admin_stats():
         )
         signup_trend = {row['date']: row['count'] for row in cur.fetchall()}
 
+        two_years_ago = (datetime.utcnow() - timedelta(days=731)).isoformat() + "Z"
+        cur.execute(
+            "SELECT SUBSTR(created_at, 1, 7) as month, COUNT(*) as count FROM users WHERE created_at >= ? GROUP BY month ORDER BY month",
+            (two_years_ago,)
+        )
+        signup_trend_monthly = {row['month']: row['count'] for row in cur.fetchall()}
+
         cur.execute("""
             SELECT u.fullname, a.action, a.timestamp FROM activity_log a
             JOIN users u ON u.id = a.user_id
@@ -1234,6 +1243,7 @@ def get_admin_stats():
             },
             "charts": {
                 "signupTrend": signup_trend,
+                "signupTrendMonthly": signup_trend_monthly,
                 "proVsFree": { "pro": pro_users, "free": total_users - pro_users }
             },
             "recentActivity": recent_activity
